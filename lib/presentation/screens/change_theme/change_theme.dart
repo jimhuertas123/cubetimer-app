@@ -14,10 +14,9 @@ class ThemeChangerScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scaffoldKey = GlobalKey<ScaffoldState>();
-    // final double heightScreen = MediaQuery.of(context).size.height * (15 / 100);
-    final ColorPair colorTheme = ref.watch(themeNotifierProvider).actualThemeColor;
-    final Color actualAppbarBGColor = ref.watch(themeNotifierProvider).actualAppbarColor;
-    final bool isDarkmode = ref.watch(themeNotifierProvider).isDarkmode;
+    final bool isDarkMode = ref.watch(themeNotifierProvider).isDarkmode;
+    final int actualThemeIndex = ref.watch(themeNotifierProvider).actualThemeIndex;
+    final int actualTextColorIndex = ref.watch(themeNotifierProvider).actualTextThemeIndex;
     return SafeArea(
         bottom: true,
         top: false,
@@ -26,8 +25,10 @@ class ThemeChangerScreen extends ConsumerWidget {
             extendBody: true,
             extendBodyBehindAppBar: true,
             appBar: AppBarHome(
-              textColor: (isDarkmode) ? Colors.black : Colors.white,  
-              themeColor: actualAppbarBGColor,
+              textColor: (actualTextColorIndex == 0) 
+                ? (isDarkMode) ? Colors.black : Colors.white
+                : appTextTheme[actualTextColorIndex].colorText,  
+              themeColor: appColorTheme[actualThemeIndex].appBarColor,
               scaffoldKey: scaffoldKey,
               // onPressedDrawer: (){},
               onPressedDrawer: () => scaffoldKey.currentState!.openDrawer(),
@@ -39,7 +40,7 @@ class ThemeChangerScreen extends ConsumerWidget {
                     context: context,
                     insetPadding: const EdgeInsets.symmetric(horizontal: 30),
                     contentPadding:
-                      const EdgeInsets.only(right: 0, left: 0, top: 15),
+                      const EdgeInsets.only(right: 0, left: 0, top: 15, bottom: 0),
                     content: const <Widget>[
                       ThemeChange(),
                     //   _changeTheme(colorTheme, ref),
@@ -87,8 +88,8 @@ class ThemeChangerScreen extends ConsumerWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    colorTheme.primaryColor,
-                    colorTheme.secondaryColor,
+                    appColorTheme[actualThemeIndex].patternColor.primaryColor,
+                    appColorTheme[actualThemeIndex].patternColor.secondaryColor,
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,

@@ -11,25 +11,27 @@ class ThemeChange extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final int halfSize = (appColorTheme.length / 2).round();
-    final ColorPair colorTheme =
-        ref.watch(themeNotifierProvider).actualThemeColor;
+    final int actualThemeIndex =
+        ref.watch(themeNotifierProvider).actualThemeIndex;
 
-    return Column(children: <Widget>[
-      themeSection(halfSize, ref),
-      Container(
-        padding: const EdgeInsets.only(left: 20),
-        alignment: Alignment.centerLeft,
-        color: const Color.fromRGBO(242,242,242,1),
-        width: 400,
-        height: 45,
-        child: const Text(
-          "Text style",
-          style: TextStyle(
-              fontSize: 15, fontWeight: FontWeight.w500, color: Colors.black),
+    return Column(
+      children: <Widget>[
+        themeSection(halfSize, ref),
+        Container(
+          padding: const EdgeInsets.only(left: 20),
+          alignment: Alignment.centerLeft,
+          color: const Color.fromRGBO(242, 242, 242, 1),
+          width: 400,
+          height: 45,
+          child: const Text(
+            "Text style",
+            style: TextStyle(
+                fontSize: 15, fontWeight: FontWeight.w500, color: Colors.black),
+          ),
         ),
-      ),
-      textStyleSection(colorTheme, ref)
-    ]);
+        textStyleSection(appColorTheme[actualThemeIndex].patternColor, ref)
+      ]
+    );
   }
 
   Widget themeSection(int halfSize, WidgetRef ref) {
@@ -40,7 +42,7 @@ class ThemeChange extends ConsumerWidget {
         child: Column(
           children: <Widget>[
             _themeType(0, halfSize, ref),
-            const SizedBox(height: 10), 
+            const SizedBox(height: 10),
             _themeType(halfSize, appColorTheme.length, ref),
             const SizedBox(height: 10),
           ],
@@ -50,8 +52,8 @@ class ThemeChange extends ConsumerWidget {
   }
 
   Widget _themeType(int start, int end, WidgetRef ref) {
-    final AppTheme actualAppColorTheme =
-        ref.watch(themeNotifierProvider);
+    final int actualAppColorThemeIndex =
+        ref.watch(themeNotifierProvider).actualThemeIndex;
     return Row(
       children: <Widget>[
         ...appColorTheme
@@ -62,14 +64,15 @@ class ThemeChange extends ConsumerWidget {
               return MapEntry(
                 actualIndex,
                 ThemeContainer(
-                  isSelected: (actualAppColorTheme.indexThemeColor == actualIndex) ? true : false,
+                  isSelected:
+                      (actualAppColorThemeIndex == actualIndex) ? true : false,
                   colors: appColorTheme[actualIndex].patternColor,
                   tittle: appColorTheme[actualIndex].name,
                   backgroundTextColor: Colors.transparent,
                   onTap: () {
                     ref
-                        .read(themeNotifierProvider.notifier)
-                        .changeThemeColorIndex(actualIndex);
+                      .read(themeNotifierProvider.notifier)
+                      .changeThemeColorIndex(actualIndex);
                   },
                 ),
               );
@@ -81,12 +84,15 @@ class ThemeChange extends ConsumerWidget {
   }
 
   Widget textStyleSection(ColorPair colorTheme, WidgetRef ref) {
-    final int halfSize = (appTextTheme.length / 2).round();
     return Container(
-        padding: EdgeInsets.zero,
+        padding: const EdgeInsets.only(left: 7),
         width: double.infinity,
-        height: 150,
+        height: 180,
         decoration: BoxDecoration(
+          borderRadius: const BorderRadius.only(
+            bottomLeft: Radius.circular(20),
+            bottomRight: Radius.circular(20),
+          ),
           gradient: LinearGradient(
             colors: [
               colorTheme.primaryColor,
@@ -97,50 +103,50 @@ class ThemeChange extends ConsumerWidget {
           ),
         ),
         // child: _textType2(ref));
-    child: SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Column(children: <Widget>[
-        _textType(0, halfSize, ref),
-      ])
-    ));
+        child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(children: <Widget>[
+              ...List.generate((appTextTheme.length / 2).ceil(), (index) {
+                int start = index * 2;
+                int end = (start + 2 > appTextTheme.length)
+                  ? appTextTheme.length
+                  : start + 2;
+                return _textType(start, end, ref);
+              }),
+
+            ])));
   }
 
   Widget _textType(int start, int end, WidgetRef ref) {
     final int actualIndexTextColor =
-        ref.watch(themeNotifierProvider).indexTextColor;
-    final Color actualColorText = ref.watch(themeNotifierProvider).actualTextColor;
-    final bool isDarkMode =
-        ref.watch(themeNotifierProvider).isDarkmode;
-    final int selectedTextIndex =
-        ref.watch(themeNotifierProvider).indexTextColor;
-    
-    return Row(
+        ref.watch(themeNotifierProvider).actualTextThemeIndex;
+    final bool isDarkMode = ref.watch(themeNotifierProvider).isDarkmode;
+    return Column(
       children: <Widget>[
-        const SizedBox(width: 10),
         ...appTextTheme
             .sublist(start, end)
             .asMap()
-            .map((index, e) {
+            .map((index, textTheme) {
               final int actualIndex = index + start;
               return MapEntry(
                   actualIndex,
                   TextThemeContainer(
-                    name: e.name,
-                    textColor: selectedTextIndex == 0 
-                      ? isDarkMode 
-                        ? Colors.black
-                        : Colors.white
-                      : actualColorText,
-                    color:  actualIndex == 0 
-                      ? isDarkMode 
-                        ? Colors.black
-                        : Colors.white
-                      : e.colorText,
-                    borderColor: selectedTextIndex == 0 
-                      ? isDarkMode 
-                        ? Colors.black
-                        : Colors.white
-                      : actualColorText,
+                    name: textTheme.name,
+                    textColor: actualIndexTextColor == 0
+                        ? isDarkMode
+                            ? Colors.black
+                            : Colors.white
+                        : appTextTheme[actualIndexTextColor].colorText,
+                    color: actualIndex == 0
+                        ? isDarkMode
+                            ? Colors.black
+                            : Colors.white
+                        : textTheme.colorText,
+                    borderColor: actualIndexTextColor == 0
+                        ? isDarkMode
+                            ? Colors.black
+                            : Colors.white
+                        : appTextTheme[actualIndexTextColor].colorText,
                     isSelected:
                         (actualIndexTextColor == actualIndex) ? true : false,
                     onTap: () {
@@ -148,7 +154,8 @@ class ThemeChange extends ConsumerWidget {
                           .read(themeNotifierProvider.notifier)
                           .changeTextColorIndex(actualIndex);
                     },
-                  ));
+                  ),
+                );
             })
             .values
             .toList(),
@@ -156,7 +163,8 @@ class ThemeChange extends ConsumerWidget {
     );
   }
 
-  Widget deprecated__textType(ref) {
+  @Deprecated("textType is deprecated, use _textType instead")
+  Widget textType(ref) {
     final int actualTextColorTheme =
         ref.watch(themeNotifierProvider).indexTextColor;
     final bool isDarkmode = ref.watch(themeNotifierProvider).isDarkmode;
@@ -181,8 +189,8 @@ class ThemeChange extends ConsumerWidget {
           isSelected: (actualTextColorTheme == index) ? true : false,
           onTap: () {
             ref
-              .read(themeNotifierProvider.notifier)
-              .changeTextColorIndex(index);
+                .read(themeNotifierProvider.notifier)
+                .changeTextColorIndex(index);
           },
         );
       },

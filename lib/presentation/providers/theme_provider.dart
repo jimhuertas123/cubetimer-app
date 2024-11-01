@@ -2,7 +2,6 @@ import 'package:cube_timer_2/config/config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
 final isDarkmodeProvider = StateProvider((ref) => false);
 final selectedColorProvider = StateProvider((ref) => 0);
 final themeNotifierProvider = StateNotifierProvider<ThemeNotifier, AppTheme>(
@@ -12,32 +11,26 @@ final themeNotifierProvider = StateNotifierProvider<ThemeNotifier, AppTheme>(
 class ThemeNotifier extends StateNotifier<AppTheme> {
   ThemeNotifier()
       : super(AppTheme(
-            actualAppbarColor: appColorTheme[0].appBarColor,
-            actualBnbarColor: appColorTheme[0].bnBarColor,
-            actualThemeColor: appColorTheme[0].patternColor,
-            actualTextColor: appTextTheme[0].colorText));
+          statusBarTextColor: Brightness.light,
+          actualThemeIndex: 0,
+          actualTextThemeIndex: 0,
+          isDarkmode: appColorTheme[0].isDarkmode,
+        ));
 
   void toggleDarkmode() {
-    state = state.copyWith(
-        statusBarTextColor: Brightness.light,
-        isDarkmode: true,
-        actualTextColor:
-            (state.indexTextColor == 0) ? whiteColor : state.actualTextColor);
+    state =
+        state.copyWith(statusBarTextColor: Brightness.light, isDarkmode: true);
   }
 
   void toggleLightMode() {
-    state = state.copyWith(
-        statusBarTextColor: Brightness.dark,
-        isDarkmode: false,
-        actualTextColor:
-            (state.indexTextColor == 0) ? blackColor : state.actualTextColor);
+    state =
+        state.copyWith(statusBarTextColor: Brightness.dark, isDarkmode: false);
   }
 
   void changeTextColorIndex(int indexTextColor) {
     if (appTextTheme.length >= indexTextColor) {
       state = state.copyWith(
-          actualTextColor: appTextTheme[indexTextColor].colorText,
-          indexTextColor: indexTextColor);
+        actualTextThemeIndex: indexTextColor);
     }
   }
 
@@ -46,14 +39,9 @@ class ThemeNotifier extends StateNotifier<AppTheme> {
   }
 
   void changeThemeColorIndex(int indexThemeColor) {
-    print(state.indexTextColor);
+    print(state.actualTextThemeIndex);
     state = state.copyWith(
-      indexThemeColor: indexThemeColor,
-      actualThemeColor: appColorTheme[indexThemeColor].patternColor,
-      indexAppbarColor: indexThemeColor,
-      actualAppbarColor: appColorTheme[indexThemeColor].appBarColor,
-      indexBnbarColor: indexThemeColor,
-      actualBnbarColor: appColorTheme[indexThemeColor].bnBarColor,
+      actualThemeIndex: indexThemeColor
     );
 
     if (appColorTheme[indexThemeColor].isDarkmode == true) {

@@ -23,14 +23,14 @@ class TextThemeContainer extends StatelessWidget {
       GestureDetector(
         onTap: onTap,
         child: Container(
-          margin: const EdgeInsets.only(left: 6, right: 6, top: 10),
+          margin: const EdgeInsets.only(left: 6, right: 12, top: 10),
           width: 55,
           height: 47,
           child: DecoratedBox(
               decoration: BoxDecoration(
                 border: Border.all(
                   color: borderColor,
-                  width: 1.5,
+                  width: 0.7,
                 ),
                 borderRadius: BorderRadius.circular(10.0),
                 color: Colors.transparent,
@@ -48,6 +48,7 @@ class TextThemeContainer extends StatelessWidget {
         fit: BoxFit.fitHeight,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 6),
+          margin: const EdgeInsets.only(bottom: 5),
           alignment: Alignment.center,
           decoration: (isSelected)
               ? BoxDecoration(
@@ -60,7 +61,6 @@ class TextThemeContainer extends StatelessWidget {
               : null,
           child: Text(name,
               style: TextStyle(
-                fontWeight: FontWeight.w500,
                 color: (isSelected) ? Colors.black : textColor,
                 fontSize: 11.0,
               )))),
