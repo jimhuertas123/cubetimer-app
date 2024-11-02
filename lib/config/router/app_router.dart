@@ -2,14 +2,10 @@ import 'package:go_router/go_router.dart';
 import 'package:cube_timer_2/presentation/screens/screens.dart';
 
 final appRouter = GoRouter(
-  initialLocation: '/theme',
+  initialLocation: '/',
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => const HomePage()  
+      builder: (context, state) => const HomeScreen()  
     ),
-    GoRoute(
-      path: '/theme',
-      builder: (context, state) => const ThemeChangerScreen()  
-    )
   ]);

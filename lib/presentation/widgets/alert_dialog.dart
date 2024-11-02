@@ -42,10 +42,14 @@ class CustomAlertDialog extends StatelessWidget {
       content: Builder(builder: (context) {
         return Container(
           padding: contentPadding,
+          height: (MediaQuery.of(context).size.height > 500) 
+            ? 472
+            : 300,
           width: (MediaQuery.of(context).size.width < 400)
               ? MediaQuery.of(context).size.width - 50
               : 400,
           child: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
             child: ListBody(children: content),
           ),
         );
