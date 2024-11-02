@@ -1,8 +1,9 @@
+import 'package:cube_timer_2/presentation/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:cube_timer_2/config/theme/app_theme.dart';
-import '../../providers/theme_provider.dart';
+
 import '../widgets.dart';
 
 class ThemeChange extends ConsumerWidget {
@@ -18,17 +19,24 @@ class ThemeChange extends ConsumerWidget {
       children: <Widget>[
         themeSection(halfSize, ref),
         Container(
-          padding: const EdgeInsets.only(left: 20),
-          alignment: Alignment.centerLeft,
           color: const Color.fromRGBO(242, 242, 242, 1),
-          width: 400,
-          height: 45,
-          child: const Text(
-            "Text style",
-            style: TextStyle(
-                fontSize: 15, fontWeight: FontWeight.w500, color: Colors.black),
-          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+            Container(
+                padding: const EdgeInsets.only(left: 20),
+                alignment: Alignment.centerLeft,
+                height: 45,
+                child: const Text(
+                  "Text style",
+                  style: TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.w500, color: Colors.black),
+                ),
+              ),
+            Container(margin: const EdgeInsets.only(right: 20), height: 45, child: const Icon(Icons.text_fields_outlined, color: Colors.black)),
+          ]),
         ),
+       
         textStyleSection(appColorTheme[actualThemeIndex].patternColor, ref)
       ]
     );

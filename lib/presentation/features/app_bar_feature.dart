@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AppBarHome extends StatelessWidget implements PreferredSizeWidget {
@@ -36,7 +37,7 @@ class AppBarHome extends StatelessWidget implements PreferredSizeWidget {
             BoxShadow(
               color: Colors.black.withOpacity(0.3),
               spreadRadius: 0.3,
-              blurRadius: 0.5,
+              blurRadius: 2.5,
               offset: const Offset(0, 0), // changes position of shadow
             ),
           ],
@@ -98,7 +99,9 @@ class AppBarHome extends StatelessWidget implements PreferredSizeWidget {
                 margin: const EdgeInsets.only(left: 8),
                 child: IconButton(
                   icon: Icon(
-                    Icons.settings_outlined,
+                    Theme.of(context).platform == TargetPlatform.iOS
+                        ? CupertinoIcons.settings_solid
+                        : Icons.settings_outlined,
                     color: textColor,
                     size: 25.0,
                   ),
