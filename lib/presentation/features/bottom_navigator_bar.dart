@@ -76,7 +76,7 @@ class _IosTabBarState extends State<IosTabBar> {
               offset: const Offset(0, 0),
             ),
           ]),
-      height: 42,
+      height: 38,
       child: ClipRRect(
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20.0),
@@ -159,7 +159,7 @@ class _AndroidBottomNavBarState extends ConsumerState<AndroidBottomNavBar> {
           ),
         ],
       ),
-      height: 45,
+      height: 40,
       child: ClipRRect(
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20.0),
