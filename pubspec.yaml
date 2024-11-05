@@ -64,6 +64,9 @@ flutter:
         - asset: fonts/Quicksand_Light.otf
         - asset: fonts/Quicksand_Bold.ttf
         - asset: fonts/Quicksand_Medium.ttf
+    - family:  CubeIcon
+      fonts:
+        - asset: fonts/CubeIcon.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:
