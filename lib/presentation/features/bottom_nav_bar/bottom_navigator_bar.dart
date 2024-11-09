@@ -1,4 +1,4 @@
-import 'package:cube_timer_2/presentation/providers/menu_controller.dart';
+import 'package:cube_timer_2/presentation/providers/menu_controller_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../icon_declarations/cube_icons.dart';
+import '../icons/custom_icons.dart';
 
 class MenuOptions {
   final int actualOption;
@@ -78,19 +78,19 @@ const appMenuOthers = <MenuItem>[
   MenuItem(
     id: 8,
     title: 'Exportar/Importar',
-    link: "/",
+    // link: "/",**NO TIENE LINK**
     icon: Icons.control_camera_outlined,
   ),
   MenuItem(
     id: 9,
     title: 'Tema de la Aplicación',
-    link: "/",
+    // link: "/",**NO TIENE LINK**
     icon: Icons.folder_outlined,
   ),
   MenuItem(
     id: 10,
     title: 'Esquema de Colores',
-    link: "/",
+    // link: "/",**NO TIENE LINK**
     icon: Icons.format_paint_outlined,
   ),
 ];

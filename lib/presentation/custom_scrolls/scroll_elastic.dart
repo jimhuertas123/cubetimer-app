@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'dart:math' as math;
 
 class ElasticScrollPhysics extends PageScrollPhysics {
-  const ElasticScrollPhysics({ScrollPhysics? parent}) : super(parent: parent);
+  const ElasticScrollPhysics({super.parent});
 
   @override
   ElasticScrollPhysics applyTo(ScrollPhysics? ancestor) {

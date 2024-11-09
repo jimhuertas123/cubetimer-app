@@ -8,12 +8,12 @@ class CustomListTile extends StatelessWidget {
   final VoidCallback onTap;
 
   const CustomListTile({
-    Key? key,
+    super.key,
     required this.title,
     required this.icon,
     required this.onTap,
     required this.selected,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
