@@ -1,10 +1,9 @@
 import 'package:cube_timer_2/presentation/providers/theme_provider.dart';
+import 'package:cube_timer_2/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:cube_timer_2/config/theme/app_theme.dart';
-
-import '../widgets.dart';
 
 class ThemeChange extends ConsumerWidget {
   const ThemeChange({super.key});
@@ -90,8 +89,7 @@ class ThemeChange extends ConsumerWidget {
                 ),
               );
             })
-            .values
-            .toList(),
+            .values,
       ],
     );
   }
@@ -171,8 +169,7 @@ class ThemeChange extends ConsumerWidget {
                 ),
               );
             })
-            .values
-            .toList(),
+            .values,
       ],
     );
   }

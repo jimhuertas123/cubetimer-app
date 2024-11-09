@@ -8,4 +8,12 @@ final appRouter = GoRouter(
       path: '/',
       builder: (context, state) => const HomeScreen()  
     ),
+    GoRoute(
+      path: '/settings',
+      builder: (context, state) => const SettingsScreen()  
+    ),
+    GoRoute(
+      path: '/about',
+      builder: (context, state) => const AboutScreen()  
+    ),
   ]);

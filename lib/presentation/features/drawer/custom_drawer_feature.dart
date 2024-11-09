@@ -1,12 +1,15 @@
-import 'package:cube_timer_2/presentation/widgets/drawer_widgets/custom_listtile.dart';
+import 'package:cube_timer_2/presentation/providers/providers.dart';
+import 'package:cube_timer_2/presentation/widgets/widgets.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:cube_timer_2/presentation/providers/menu_options.dart';
+
 import 'package:cube_timer_2/config/config.dart';
 
 class DrawerHome extends ConsumerWidget {
   const DrawerHome({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final int selectedOption =
@@ -31,12 +34,12 @@ class DrawerHome extends ConsumerWidget {
               return (element.children == null)
                   ? (selectedOption == element.id)
                       ? _listTileDrawer(
-                          element.id, element.icon, element.title, true, ref)
+                          element.id, element.icon, element.title, true, ref, context)
                       : _listTileDrawer(
-                          element.id, element.icon, element.title, false, ref)
-                  : _listTileExpandable(context,element.id, element.icon, element.title,
-                      element.children!, selectedOption, ref);
-            }).toList(),
+                          element.id, element.icon, element.title, false, ref, context)
+                  : _listTileExpandable(context, element.id, element.icon,
+                      element.title, element.children!, selectedOption, ref);
+            }),
             const Divider(color: Color.fromRGBO(158, 158, 158, 0.4)),
             const Padding(
                 padding: EdgeInsets.only(left: 14.0, top: 6.0, bottom: 20.0),
@@ -48,18 +51,18 @@ class DrawerHome extends ConsumerWidget {
             ...appMenuOthers.map((element) {
               return (selectedOption == element.id)
                   ? _listTileDrawer(
-                      element.id, element.icon, element.title, true, ref)
+                      element.id, element.icon, element.title, true, ref, context)
                   : _listTileDrawer(
-                      element.id, element.icon, element.title, false, ref);
-            }).toList(),
+                      element.id, element.icon, element.title, false, ref, context);
+            }),
             const Divider(color: Color.fromRGBO(158, 158, 158, 0.4)),
             ...appMenufinalItems.map((element) {
               return (selectedOption == element.id)
                   ? _listTileDrawer(
-                      element.id, element.icon, element.title, true, ref)
+                      element.id, element.icon, element.title, true, ref, context)
                   : _listTileDrawer(
-                      element.id, element.icon, element.title, false, ref);
-            }).toList(),
+                      element.id, element.icon, element.title, false, ref, context);
+            }),
             const SizedBox(height: 5)
           ],
         ),
@@ -67,7 +70,7 @@ class DrawerHome extends ConsumerWidget {
     );
   }
 
-  _listTileExpandable(BuildContext context,int id, IconData icon, String title,
+  _listTileExpandable(BuildContext context, int id, IconData icon, String title,
       List<MenuItem> items, int selectedOption, WidgetRef ref) {
     return Theme(
       data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
@@ -78,9 +81,15 @@ class DrawerHome extends ConsumerWidget {
           // color: const Color.fromRGBO(244, 67, 54, 0.5),
         ),
         child: ExpansionTile(
-            initiallyExpanded: id == 1 
-              ? selectedOption == 2 || selectedOption == 3 ? true : false
-              : id == 4 ? selectedOption == 5 ? true : false : false,
+            initiallyExpanded: id == 1
+                ? selectedOption == 2 || selectedOption == 3
+                    ? true
+                    : false
+                : id == 4
+                    ? selectedOption == 5
+                        ? true
+                        : false
+                    : false,
             collapsedShape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5),
             ),
@@ -93,6 +102,7 @@ class DrawerHome extends ConsumerWidget {
               padding: const EdgeInsets.only(left: 18.0),
               child: Text(title,
                   style: const TextStyle(
+                    color: Colors.black87,
                     fontFamily: 'Arial',
                     fontSize: 15.0,
                     fontWeight: FontWeight.w500,
@@ -109,7 +119,7 @@ class DrawerHome extends ConsumerWidget {
                         icon: item.icon,
                         title: item.title,
                         key: Key(item.id.toString()),
-                        onTap: () {
+                        onTap: () async {
                           if (item.id != selectedOption) {
                             ref
                                 .read(menuOptionsNotifierProvider.notifier)
@@ -117,13 +127,12 @@ class DrawerHome extends ConsumerWidget {
                           }
                         },
                       ))
-                  .toList()
             ]),
       ),
     );
   }
 
-  _listTileDrawer(int id, icon, String title, bool selected, WidgetRef ref) {
+  _listTileDrawer(int id, icon, String title, bool selected, WidgetRef ref, BuildContext context) {
     final int selectedOption =
         ref.watch(menuOptionsNotifierProvider).actualOption;
 
@@ -142,6 +151,7 @@ class DrawerHome extends ConsumerWidget {
         key: Key(id.toString()),
         selected: selected,
         selectedColor: const Color(0xFF4aa8ef),
+        textColor: Colors.black87,
         title: Padding(
           padding: const EdgeInsets.only(left: 18.0),
           child: Text(title,
@@ -157,8 +167,22 @@ class DrawerHome extends ConsumerWidget {
         dense: true,
         visualDensity: const VisualDensity(horizontal: -4, vertical: -3),
         onTap: () {
+          if(id == 9){
+            Navigator.of(context).pop();
+            showDialog(
+                context: context,
+                builder: (context) => CustomAlertDialog(
+                  tittle: 'App theme',
+                  fontTittleSize: 20.0,
+                  context: context,
+                  insetPadding: const EdgeInsets.symmetric(horizontal: 30),
+                  contentPadding: const EdgeInsets.only(
+                      right: 0, left: 0, top: 15, bottom: 0),
+                  content: const <Widget>[ThemeChange()]
+              )
+            );
+          }
           if (id == 0 && selectedOption != 0) {
-            // Navigator.of(context).pushNamed('/');
             ref.read(menuOptionsNotifierProvider.notifier).changeOption(id);
           }
         },
