@@ -6,7 +6,7 @@ final menuOptionsNotifierProvider = StateNotifierProvider<MenuOptionsNotifier, M
 );
 
 class MenuOptionsNotifier extends StateNotifier<MenuOptions> {
-  MenuOptionsNotifier(): super(MenuOptions(actualOption: 0, options: appMenuItems));
+  MenuOptionsNotifier(): super(MenuOptions( actualOption: 0 ));
 
   void changeOption(int newMenuOption) {
     state = state.copyWith(

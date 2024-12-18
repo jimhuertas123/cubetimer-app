@@ -1,23 +1,21 @@
 // import 'package:cube_timer_v2/config/config.dart';
 import 'package:cube_timer_2/config/config.dart';
-import 'package:cube_timer_2/presentation/features/body_contents/body_main.dart';
-import 'package:cube_timer_2/presentation/features/custom_drawer_feature.dart';
-import 'package:cube_timer_2/presentation/providers/menu_controller.dart';
-import 'package:cube_timer_2/presentation/widgets/theme_widget/theme_change.dart';
+import 'package:cube_timer_2/presentation/features/features.dart';
+import 'package:cube_timer_2/presentation/providers/providers.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:cube_timer_2/presentation/widgets/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../providers/theme_provider.dart';
+
+final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
 class HomeScreen extends ConsumerWidget {
-  
   const HomeScreen({super.key});
-
+  // final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scaffoldKey = GlobalKey<ScaffoldState>();
     final bool isDarkMode = ref.watch(themeNotifierProvider).isDarkmode;
     final int actualThemeIndex =
         ref.watch(themeNotifierProvider).actualThemeIndex;
@@ -31,6 +29,9 @@ class HomeScreen extends ConsumerWidget {
       initialPage: indexPage,
     );
 
+    //body changes
+    final int selectedOption = ref.watch(menuOptionsNotifierProvider).actualOption;
+
     return SafeArea(
       bottom: true,
       top: false,
@@ -39,6 +40,7 @@ class HomeScreen extends ConsumerWidget {
           extendBody: true,
           extendBodyBehindAppBar: true,
           appBar: AppBarHome(
+            actualPageIndex: indexPage,
             textColor: (actualTextColorIndex == 0)
                 ? (isDarkMode)
                     ? Colors.black
@@ -46,117 +48,82 @@ class HomeScreen extends ConsumerWidget {
                 : appTextTheme[actualTextColorIndex].colorText,
             themeColor: appColorTheme[actualThemeIndex].appBarColor,
             scaffoldKey: scaffoldKey,
-            onPressedDrawer: () => scaffoldKey.currentState!.openDrawer(),
-            onPressedTittle: () => showDialog(
+            onPressedDrawer: () => scaffoldKey.currentState?.openDrawer(),
+            
+            //tittle change according to the selected option
+            // tittle: appMenuScreensItems[selectedOption].title,
+            // subtittle: 'xd',
+            onPressedTittle: () => 
+              showDialog(
                 context: context,
                 builder: (context) => CustomAlertDialog(
-                      tittle: 'App theme',
-                      fontTittleSize: 20.0,
-                      context: context,
-                      insetPadding: const EdgeInsets.symmetric(horizontal: 30),
-                      contentPadding: const EdgeInsets.only(
-                          right: 0, left: 0, top: 15, bottom: 0),
-                      content: const <Widget>[
-                        ThemeChange(),
-                        //   _changeTheme(colorTheme, ref),
-                        //   _changeTheme(colorTheme, ref),
-                        // SizedBox(
-                        //   height: 300,
-                        //   child: GridView.count(
-                        //     padding: const EdgeInsets.all(0.0),
-                        //     crossAxisSpacing: 4.0,
-                        //     mainAxisSpacing: 0.0,
-                        //     physics: const BouncingScrollPhysics(),
-                        //     crossAxisCount: 3,
-                        //     children:
-                        //         List.generate(icon_list.length, (index) {
-                        //       return Container(
-                        //         width: 10,
-                        //         height: 10,
-                        //         padding: const EdgeInsets.all(0),
-                        //         color: Colors.green,
-                        //         child: ElevatedButton(
-                        //             onPressed: () {},
-                        //             style: ButtonStyle(
-                        //               fixedSize: MaterialStateProperty.all(Size(2, 2)),
-                        //               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        //                   RoundedRectangleBorder(
-                        //                       borderRadius: BorderRadius.circular(20),
-                        //                       // side: BorderSide(color: Colors.yellow)
-                        //                   )),
-                        //               padding: MaterialStateProperty.all(EdgeInsets.all(0)),
-                        //             ),
-                        //             child: _customButton(
-                        //                 category:
-                        //                     'Cubo ${index + 2}x${index + 2}',
-                        //                 icon: icon_list[index])),
-                        //       );
-                        //     }),
-                        //   )),
-                      ],
-                    )),
+                  tittle: 'App theme',
+                  fontTittleSize: 20.0,
+                  context: context,
+                  insetPadding: const EdgeInsets.symmetric(horizontal: 30),
+                  contentPadding: const EdgeInsets.only(
+                      right: 0, left: 0, top: 15, bottom: 0),
+                  content: const <Widget>[
+                    ThemeChange(),
+                  ],
+                )),
           ),
-          body: BodyContent(
-            patternColor: appColorTheme[actualThemeIndex].patternColor, 
-            pageController: pageController
-          ),
-          // body: PageView.builder(
-          //   controller: pageController,
-          //   itemCount: 3,
-          //   onPageChanged: (index) {
-          //     ref.read(pageIndexProviderInt.notifier).setPageIndex(index);
-          //   },
-          //   itemBuilder: (context, index) {
-          //     return Container(
-          //       color: index == 0
-          //           ? Colors.red
-          //           : index == 1
-          //               ? Colors.green
-          //               : Colors.blue,
-          //       child: Center(
-          //         child: Text(
-          //           'Page $index',
-          //           style: TextStyle(color: Colors.white, fontSize: 24),
-          //         ),
-          //       ),
-          //     );
-          //   },
-          // ),
-          bottomNavigationBar: CustomBottomNavigationBar(
-            pageController: pageController,
-            backgroundColor: appColorTheme[actualThemeIndex].bnBarColor,
-            activeIconColor: actualTextColorIndex == 0
-                ? appColorTheme[actualThemeIndex].isDarkmode
-                    ? Colors.black
-                    : Colors.white
-                : appTextTheme[actualTextColorIndex].colorText,
-            inactiveIconColor: appColorTheme[actualThemeIndex].isDarkmode
-                ? Colors.black54
-                : Colors.white54,
-            onTap: (index) {
-              pageController.animateToPage(
-                index,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-              );
-              ref.read(pageIndexProviderInt.notifier).setPageIndex(index);
-            },
-          ),
+          body: _getBodyContent(pageController, appColorTheme[actualThemeIndex].patternColor ,selectedOption, actualThemeIndex, ref, context),
+          bottomNavigationBar: selectedOption == 0 || selectedOption == 2 || selectedOption == 3
+            ? CustomBottomNavigationBar(
+                pageController: pageController,
+                backgroundColor: appColorTheme[actualThemeIndex].bnBarColor,
+                activeIconColor: actualTextColorIndex == 0
+                    ? appColorTheme[actualThemeIndex].isDarkmode
+                        ? Colors.black
+                        : Colors.white
+                    : appTextTheme[actualTextColorIndex].colorText,
+                inactiveIconColor: appColorTheme[actualThemeIndex].isDarkmode
+                    ? Colors.black54
+                    : Colors.white54,
+                onTap: (index) {
+                  pageController.animateToPage(
+                    index,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
+                  ref.read(pageIndexProviderInt.notifier).setPageIndex(index);
+                },
+              )
+            : null,
           drawer: const DrawerHome()),
     );
   }
 
-  _customButton({required Image icon, required String category}) {
-    return Column(
-      mainAxisSize: MainAxisSize.min, // Alinea el contenido al centro
-      children: [
-        icon, // Icono
-        const SizedBox(height: 8.0), // Espacio entre el icono y el texto
-        Text(
-          category,
-          style: const TextStyle(color: Colors.black),
-        ), // Texto
-      ],
-    );
+  Widget _getBodyContent( PageController pageController, ColorPair patternColor,
+      int currentOption, int actualThemeIndex, WidgetRef ref, context)  {
+    switch (currentOption) {
+      case 0:
+        return MainBody(
+          optionBody: 0, //main body in constructor
+          patternColor: appColorTheme[actualThemeIndex].patternColor,
+          pageController: pageController
+        );
+      case 2:
+        return MainBody(
+          optionBody: 1, //oll training body in constructor
+          patternColor: const ColorPair(primaryColor: Colors.black, secondaryColor: Colors.white),
+          pageController: pageController
+        );
+      case 3:
+        return MainBody(
+          optionBody: 2, //pll training body in constructor
+          patternColor: const ColorPair(primaryColor: Colors.red, secondaryColor: Colors.green),
+          pageController: pageController
+        );
+      case 5:
+        ref.read(pageIndexProviderInt.notifier).setPageIndex(0);
+        return const Center(child: Text("Contenido de Opción 2"));
+      case 6:
+        ref.read(pageIndexProviderInt.notifier).setPageIndex(0);
+        return const Center(child: Text("Contenido de Opción 2"));
+      default:
+        return const Center(child: Text("Selecciona una opción en el Drawer"));
+    }
   }
 }

@@ -1,4 +1,4 @@
-import 'package:cube_timer_2/presentation/providers/menu_controller.dart';
+import 'package:cube_timer_2/presentation/providers/menu_controller_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -76,7 +76,7 @@ class _IosTabBarState extends State<IosTabBar> {
               offset: const Offset(0, 0),
             ),
           ]),
-      height: 42,
+      height: 38,
       child: ClipRRect(
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20.0),
@@ -159,7 +159,7 @@ class _AndroidBottomNavBarState extends ConsumerState<AndroidBottomNavBar> {
           ),
         ],
       ),
-      height: 45,
+      height: 40,
       child: ClipRRect(
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20.0),

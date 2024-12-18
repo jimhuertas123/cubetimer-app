@@ -17,6 +17,7 @@ class MyApp extends ConsumerWidget {
         title: 'Cube Timer',
         debugShowCheckedModeBanner: false,
         theme: appTheme.getTheme(),
-        routerConfig: appRouter);
+        routerConfig: appRouter
+      );
   }
 }
