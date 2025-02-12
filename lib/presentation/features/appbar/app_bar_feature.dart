@@ -49,7 +49,7 @@ class _AppBarHomeState extends State<AppBarHome> {
           borderRadius: BorderRadius.circular(17.0),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.black.withAlpha(30),
               spreadRadius: 0.3,
               blurRadius: 2.5,
               offset: const Offset(0, 0), 
@@ -111,7 +111,7 @@ class _AppBarHomeState extends State<AppBarHome> {
                 child: IconButton(
                   iconSize: 25.0,
                   icon: Icon(Icons.category_outlined, color: widget.textColor),
-                  onPressed: (() => print(
+                  onPressed: (() => debugPrint(
                       "momento god")), //() async =>showAlertDialogNewCategory(context),),
                 )),
             const SizedBox(width: 15)

@@ -42,13 +42,14 @@ class Matrix {
   }
   
   void printMatrix(){
+    // ignore: unused_local_variable
     String aux = "";
     for(var i=0; i<_matrix.length; i++){
       for(var j=0; j<_matrix[i].length; j++){
         aux += _matrix[i][j].toString();
         aux += " ";
       }
-      print(aux);
+      // debugPrint(aux);
       aux = "";
     }
   }

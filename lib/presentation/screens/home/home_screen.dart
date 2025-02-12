@@ -2,6 +2,7 @@
 import 'package:cube_timer_2/config/config.dart';
 import 'package:cube_timer_2/presentation/features/features.dart';
 import 'package:cube_timer_2/presentation/providers/providers.dart';
+import 'package:cube_timer_2/presentation/widgets/puzzle_widgets/puzzle_selection.dart';
 
 import 'package:flutter/material.dart';
 
@@ -57,14 +58,14 @@ class HomeScreen extends ConsumerWidget {
               showDialog(
                 context: context,
                 builder: (context) => CustomAlertDialog(
-                  tittle: 'App theme',
+                  tittle: 'Select a puzzle',
                   fontTittleSize: 20.0,
                   context: context,
                   insetPadding: const EdgeInsets.symmetric(horizontal: 30),
                   contentPadding: const EdgeInsets.only(
-                      right: 0, left: 0, top: 15, bottom: 0),
+                      right: 0, left: 0, top: 0, bottom: 0),
                   content: const <Widget>[
-                    ThemeChange(),
+                    PuzzleSelection(),
                   ],
                 )),
           ),

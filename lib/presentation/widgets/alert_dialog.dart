@@ -41,6 +41,7 @@ class CustomAlertDialog extends StatelessWidget {
       actions: actions,
       content: Builder(builder: (context) {
         return Container(
+          color: Colors.red,
           padding: contentPadding,
           height: (MediaQuery.of(context).size.height > 500) 
             ? 472
