@@ -49,6 +49,9 @@ flutter:
     - assets/category/
 
   fonts:
+    - family: Lato
+      fonts:
+        - asset: fonts/Lato-Bold.ttf
     - family: Poppins
       fonts:
         - asset: fonts/Poppins-Regular.otf
