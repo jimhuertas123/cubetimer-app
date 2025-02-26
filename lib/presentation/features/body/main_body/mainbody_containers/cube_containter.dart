@@ -25,47 +25,10 @@ class CubeContainer extends StatelessWidget {
               width: containerWidth,
               child: Column(
                 children: [
-                  Container(
-                    width: double.infinity,
-                    height: containerHeight > 400 ? containerHeight*15/100 : containerHeight*20/100,
-                    color: Color.fromRGBO(100, 100, 100, 0.3),
-                    child: Text('Container Height: $containerHeight')
-                  ),
                   CronometerCube(
                     fontSize: containerHeight > 400 ? containerHeight*0.16 : containerHeight*0.35, 
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 5),
-                    width: double.infinity,
-                    height: 87,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Column(
-                          children: <Widget>[
-                            Text('''
-                              Deviation: --,
-                              Mean: 6.15
-                              Best: 6.15
-                              Count: 1''',
-                              textAlign: TextAlign.left,
-                              textDirection: TextDirection.rtl,
-                            ),
-                          ]
-                        ),
-                        Column(
-                          children: <Widget>[
-                            Text('''
-                              Ao5: 2.45.2
-                              Ao12: 2.45.2
-                              Ao50: 2.45.2
-                              Ao100: 2.45.2''',
-                              textAlign: TextAlign.end,
-                            ),
-                          ]
-                        ),
-                      ]
-                    )
+                    containerHeight: containerHeight,
+                    containerWidth: containerWidth,
                   ),
                 ],
               ),

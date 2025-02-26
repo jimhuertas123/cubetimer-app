@@ -2,6 +2,7 @@ import 'package:cube_timer_2/presentation/custom_scrolls/scroll_elastic.dart';
 import 'package:cube_timer_2/presentation/providers/menu_controller_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 class PageViewContainers extends ConsumerWidget {
   final Animation<double> stretchAnimation;
   final PageController pageController;

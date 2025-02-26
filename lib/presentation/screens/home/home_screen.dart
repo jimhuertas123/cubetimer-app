@@ -118,10 +118,8 @@ class HomeScreen extends ConsumerWidget {
           pageController: pageController
         );
       case 5:
-        ref.read(pageIndexProviderInt.notifier).setPageIndex(0);
         return const Center(child: Text("Contenido de Opción 2"));
       case 6:
-        ref.read(pageIndexProviderInt.notifier).setPageIndex(0);
         return const Center(child: Text("Contenido de Opción 2"));
       default:
         return const Center(child: Text("Selecciona una opción en el Drawer"));
