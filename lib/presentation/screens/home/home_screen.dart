@@ -32,7 +32,7 @@ class HomeScreen extends ConsumerWidget {
 
     //body changes
     final int selectedOption = ref.watch(menuOptionsNotifierProvider).actualOption;
-
+    final bool isTimerRunning = ref.watch(cronometerRunnerProvider);
     return SafeArea(
       bottom: true,
       top: false,
@@ -41,6 +41,7 @@ class HomeScreen extends ConsumerWidget {
           extendBody: true,
           extendBodyBehindAppBar: true,
           appBar: AppBarHome(
+            isTimerRunnin: isTimerRunning,
             actualPageIndex: indexPage,
             textColor: (actualTextColorIndex == 0)
                 ? (isDarkMode)
@@ -72,6 +73,7 @@ class HomeScreen extends ConsumerWidget {
           body: _getBodyContent(pageController, appColorTheme[actualThemeIndex].patternColor ,selectedOption, actualThemeIndex, ref, context),
           bottomNavigationBar: selectedOption == 0 || selectedOption == 2 || selectedOption == 3
             ? CustomBottomNavigationBar(
+                isTimerRunning: isTimerRunning,
                 pageController: pageController,
                 backgroundColor: appColorTheme[actualThemeIndex].bnBarColor,
                 activeIconColor: actualTextColorIndex == 0

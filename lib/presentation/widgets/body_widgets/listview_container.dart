@@ -1,12 +1,14 @@
 import 'package:cube_timer_2/presentation/custom_scrolls/scroll_elastic.dart';
-import 'package:cube_timer_2/presentation/providers/menu_controller_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../providers/providers.dart';
 
 class PageViewContainers extends ConsumerWidget {
   final Animation<double> stretchAnimation;
   final PageController pageController;
   final List<Widget> pages;
+
   const PageViewContainers({
     super.key,
     required this.stretchAnimation,
@@ -16,13 +18,16 @@ class PageViewContainers extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    final bool isTimerRunning = ref.watch(cronometerRunnerProvider);
+
     return PageView.builder(
       onPageChanged: (index) {
         ref.read(pageIndexProviderInt.notifier).setPageIndex(index);
       },
       controller: pageController,
       scrollDirection: Axis.horizontal,
-      physics: const ElasticScrollPhysics(),
+      physics: isTimerRunning ? const NeverScrollableScrollPhysics() : const ElasticScrollPhysics(),
       itemCount: pages.length,
       itemBuilder: (context, index) {
         return AnimatedBuilder(

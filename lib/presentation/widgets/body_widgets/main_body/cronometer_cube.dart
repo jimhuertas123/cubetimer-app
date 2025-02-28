@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cube_timer_2/presentation/providers/cronometer_runner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,34 +9,37 @@ class CronometerCube extends ConsumerStatefulWidget {
   final double containerHeight;
   final double containerWidth;
 
-  const CronometerCube({
-    super.key,
-    required this.fontSize,
-    required this.containerHeight,
-    required this.containerWidth
-  });
+  const CronometerCube(
+      {super.key,
+      required this.fontSize,
+      required this.containerHeight,
+      required this.containerWidth});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _CronometerCubeState();
 }
 
-class _CronometerCubeState extends ConsumerState<CronometerCube> with SingleTickerProviderStateMixin {
+class _CronometerCubeState extends ConsumerState<CronometerCube>
+    with SingleTickerProviderStateMixin {
   Timer _timer = Timer(Duration(seconds: 0), () {});
   int minutes = 0;
   int seconds = 0;
   int milliseconds = 0;
   int macroseconds = 0;
-  bool isRunning = false;
+
   late AnimationController _animationController;
-  late Animation<Offset> _slideAnimation;
+  late Animation<Offset> _slideAnimationScramble;
+  late Animation<Offset> _slideAnimationResults;
+  late Animation<double> _scaleAnimation;
+  late Animation<double> _fadeAnimation;
 
-
-  void startTimer() {
+  void startTimer(bool isRunning) {
     debugPrint("startTimer");
     if (isRunning) {
       setState(() {
         isRunning = false;
         _timer.cancel();
+        _animationController.reverse();
       });
       return;
     }
@@ -58,16 +62,43 @@ class _CronometerCubeState extends ConsumerState<CronometerCube> with SingleTick
   @override
   void initState() {
     super.initState();
+
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 400),
+      reverseDuration: const Duration(milliseconds: 1000),
       vsync: this,
     );
-    _slideAnimation = Tween<Offset>(
+
+    _slideAnimationScramble = Tween<Offset>(
       begin: Offset.zero,
       end: const Offset(0, -1),
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
+    ));
+
+    _slideAnimationResults = Tween<Offset>(
+      begin: Offset.zero,
+      end: const Offset(0, 1),
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 1.2,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+
+    _fadeAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOutBack,
     ));
   }
 
@@ -80,31 +111,50 @@ class _CronometerCubeState extends ConsumerState<CronometerCube> with SingleTick
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("build");
+    bool isRunning = ref.watch(cronometerRunnerProvider);
+
     return Expanded(
       child: GestureDetector(
-        onTap: () => startTimer(),
+        onTap: () => {
+          ref
+              .read(cronometerRunnerProvider.notifier)
+              .isTimerRunning(!isRunning),
+          debugPrint("isRunning: $isRunning"),
+          startTimer(isRunning)
+        },
         child: Container(
           color: Colors.blue,
           child: Center(
             child: Column(children: [
               //SCRAMBLE
               SlideTransition(
-                position: _slideAnimation,
-                child: Container(
-                  width: double.infinity,
-                  height: widget.containerHeight > 400
-                      ? widget.containerHeight * 15 / 100
-                      : widget.containerHeight * 20 / 100,
-                  color: Color.fromRGBO(100, 100, 100, 0.3),
-                  child: Text('Container Height: ${widget.containerHeight}'),
+                position: _slideAnimationScramble,
+                child: FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: Container(
+                    width: double.infinity,
+                    height: widget.containerHeight > 400
+                        ? widget.containerHeight * 15 / 100
+                        : widget.containerHeight * 20 / 100,
+                    color: Color.fromRGBO(100, 100, 100, 0.3),
+                    child: Text('Container Height: ${widget.containerHeight}'),
+                  ),
                 ),
               ),
+
               //CRONOMETER
-              CronometerTime(timer: _timer, widget: widget),
+              Expanded(
+                child: ScaleTransition(
+                    scale: _scaleAnimation,
+                    child: CronometerTime(timer: _timer, widget: widget)),
+              ),
 
               //RESULTS
-              CronometerResults(),
+              SlideTransition(
+                position: _slideAnimationResults,
+                child: FadeTransition(
+                    opacity: _fadeAnimation, child: CronometerResults()),
+              ),
             ]),
           ),
         ),
@@ -172,49 +222,47 @@ class CronometerTime extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Visibility(
-              visible: _timer.tick > 60000,
-              child: Text(
-                "1:",
-                style: TextStyle(
-                  fontFamily: 'Lato',
-                  fontSize: widget.fontSize,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  height: 0.9,
-                ),
-              )),
-          Text(
-            _timer.tick > 60000
-                ? _timer.tick < 70000
-                    ? "0${_timer.tick ~/ 1000 % 60}"
-                    : "${_timer.tick ~/ 1000 % 60}"
-                : "${_timer.tick ~/ 1000 % 60}",
-            style: TextStyle(
-              fontFamily: 'Lato',
-              fontSize: widget.fontSize,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              height: 0.9,
-            ),
-            textAlign: TextAlign.end,
-          ),
-          Text(
-            ".${_timer.tick ~/ 100 % 10}${_timer.tick % 10}",
-            style: TextStyle(
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Visibility(
+            visible: _timer.tick > 60000,
+            child: Text(
+              "1:",
+              style: TextStyle(
                 fontFamily: 'Lato',
-                fontSize: widget.fontSize * 0.75,
+                fontSize: widget.fontSize,
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                height: 0.9),
-          )
-        ],
-      ),
+                height: 0.9,
+              ),
+            )),
+        Text(
+          _timer.tick > 60000
+              ? _timer.tick < 70000
+                  ? "0${_timer.tick ~/ 1000 % 60}"
+                  : "${_timer.tick ~/ 1000 % 60}"
+              : "${_timer.tick ~/ 1000 % 60}",
+          style: TextStyle(
+            fontFamily: 'Lato',
+            fontSize: widget.fontSize,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            height: 0.9,
+          ),
+          textAlign: TextAlign.end,
+        ),
+        Text(
+          ".${_timer.tick ~/ 100 % 10}${_timer.tick % 10}",
+          style: TextStyle(
+              fontFamily: 'Lato',
+              fontSize: widget.fontSize * 0.75,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              height: 0.9),
+        )
+      ],
     );
   }
 }
