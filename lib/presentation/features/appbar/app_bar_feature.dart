@@ -79,8 +79,6 @@ class _AppBarHomeState extends State<AppBarHome> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("RUNNNING: ${widget.isTimerRunnin}");
-
     if (widget.isTimerRunnin) {
       _animationController.forward();
     } else {
