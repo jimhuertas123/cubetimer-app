@@ -32,7 +32,7 @@ class HomeScreen extends ConsumerWidget {
 
     //body changes
     final int selectedOption = ref.watch(menuOptionsNotifierProvider).actualOption;
-    final bool isTimerRunning = ref.watch(cronometerRunnerProvider);
+    final bool isTimerRunning = ref.watch(cronometerRunnerProvider).isRunning;
 
     return SafeArea(
       bottom: true,

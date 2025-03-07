@@ -19,7 +19,7 @@ class PageViewContainers extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-    final bool isTimerRunning = ref.watch(cronometerRunnerProvider);
+    final bool isTimerRunning = ref.watch(cronometerRunnerProvider).isRunning;
 
     return PageView.builder(
       onPageChanged: (index) {
