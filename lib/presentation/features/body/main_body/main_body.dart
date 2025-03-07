@@ -47,7 +47,6 @@ class _MainBodyState extends State<MainBody>
   @override
   Widget build(BuildContext context) {
     debugPrint("mainbody build");
-
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification notification) {
         if (notification is OverscrollNotification && !isAtEdge) {

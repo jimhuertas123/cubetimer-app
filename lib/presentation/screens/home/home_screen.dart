@@ -32,6 +32,7 @@ class HomeScreen extends ConsumerWidget {
 
     //body changes
     final int selectedOption = ref.watch(menuOptionsNotifierProvider).actualOption;
+    final bool isTimerRunning = ref.watch(cronometerRunnerProvider).isRunning;
 
     return SafeArea(
       bottom: true,
@@ -41,6 +42,7 @@ class HomeScreen extends ConsumerWidget {
           extendBody: true,
           extendBodyBehindAppBar: true,
           appBar: AppBarHome(
+            isTimerRunnin: isTimerRunning,
             actualPageIndex: indexPage,
             textColor: (actualTextColorIndex == 0)
                 ? (isDarkMode)
@@ -72,6 +74,7 @@ class HomeScreen extends ConsumerWidget {
           body: _getBodyContent(pageController, appColorTheme[actualThemeIndex].patternColor ,selectedOption, actualThemeIndex, ref, context),
           bottomNavigationBar: selectedOption == 0 || selectedOption == 2 || selectedOption == 3
             ? CustomBottomNavigationBar(
+                isTimerRunning: isTimerRunning,
                 pageController: pageController,
                 backgroundColor: appColorTheme[actualThemeIndex].bnBarColor,
                 activeIconColor: actualTextColorIndex == 0
@@ -118,10 +121,8 @@ class HomeScreen extends ConsumerWidget {
           pageController: pageController
         );
       case 5:
-        ref.read(pageIndexProviderInt.notifier).setPageIndex(0);
         return const Center(child: Text("Contenido de Opción 2"));
       case 6:
-        ref.read(pageIndexProviderInt.notifier).setPageIndex(0);
         return const Center(child: Text("Contenido de Opción 2"));
       default:
         return const Center(child: Text("Selecciona una opción en el Drawer"));
