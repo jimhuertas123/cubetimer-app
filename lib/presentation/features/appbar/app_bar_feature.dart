@@ -16,16 +16,16 @@ class AppBarHome extends StatefulWidget implements PreferredSizeWidget {
   // final Type typeCube;
 
   const AppBarHome({
+    super.key,
     required this.onPressedDrawer,
     required this.onPressedTittle,
     required this.themeColor,
     required this.textColor,
     required this.scaffoldKey,
     required this.isTimerRunnin,
-    super.key,
+    required this.tittle,
+    required this.subtittle,
     this.widthDevice = 0,
-    this.tittle = 'Cubo 3x3',
-    this.subtittle = 'normal',
     this.actualPageIndex,
     //required this.typeCube
   });
