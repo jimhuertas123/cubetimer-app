@@ -287,100 +287,66 @@ class _AndroidButtonSplashRowState extends ConsumerState<AndroidButtonSplashRow>
         itemBuilder: (context, index) {
           GlobalKey key = GlobalKey();
           return Center(
-            child: Transform(
-              transform: Matrix4.identity()..scale(1.0, 1.0),
-              child: GestureDetector(
-                onTapDown: (details) {
-                  if (!_isTouchDisabled) {
-                    setState(() {
-                      _isTouchDisabled = true;
-                    });
-                    RenderBox renderBox =
-                        key.currentContext!.findRenderObject() as RenderBox;
-                    Offset position = renderBox.localToGlobal(Offset.zero);
-                    Size size = renderBox.size;
-                    _showOverlay(context, position, size);
+            child: GestureDetector(
+              onTap: () async {
+                CubeType optionWanted =
+                    CubeType.values[widget.addingIndex + index];
+                if (optionWanted != actualPuzzleOption) {
+                  await _removeOverlay();
+                  ref
+                      .read(puzzleOptionsProvider.notifier)
+                      .setPuzzleOption(
+                        widget.addingIndex + index,
+                      );
+                }
+                if (mounted) context.pop();
+                
+              },
+              onLongPressStart: (details) async {
+                if (!_isTouchDisabled) {
+                  setState(() {
+                    _isTouchDisabled = true;
+                  });
+                  RenderBox renderBox =
+                      key.currentContext!.findRenderObject() as RenderBox;
+                  Offset position = renderBox.localToGlobal(Offset.zero);
+                  Size size = renderBox.size;
+                  _showOverlay(context, position, size);
+                }
+              },
+              onLongPressEnd: (details) async {
+                _removeOverlay();
+                CubeType optionWanted =
+                    CubeType.values[widget.addingIndex + index];
+                if (optionWanted != actualPuzzleOption) {
+                  await _removeOverlay();
+                  if (mounted) {
+                    ref.read(puzzleOptionsProvider.notifier).setPuzzleOption(
+                          widget.addingIndex + index,
+                        );
+                    context.pop();
                   }
-                },
-                onTapUp: (details) {
-                  _removeOverlay();
-                },
-                onTapCancel: () {
-                  _removeOverlay();
-                },
-                onLongPressStart: (details) async {
-                  if (!_isTouchDisabled) {
-                    setState(() {
-                      _isTouchDisabled = true;
-                    });
-                    RenderBox renderBox =
-                        key.currentContext!.findRenderObject() as RenderBox;
-                    Offset position = renderBox.localToGlobal(Offset.zero);
-                    Size size = renderBox.size;
-                    _showOverlay(context, position, size);
-                  }
-                  CubeType optionWanted =
-                      CubeType.values[widget.addingIndex + index];
-                  if (optionWanted != actualPuzzleOption) {
-                    await _removeOverlay();
-                    if (mounted) {
-                      ref.read(puzzleOptionsProvider.notifier).setPuzzleOption(
-                            widget.addingIndex + index,
-                          );
-                      context.pop();
-                    }
-                  }
-                },
-                onLongPressEnd: (details) {
-                  _removeOverlay();
-                },
-                child: Stack(
-                  children: [
-                    Container(
-                      //container for every children
-                      key: key,
-                      width: (MediaQuery.of(context).size.width < 500)
-                          ? (MediaQuery.of(context).size.width) / 3.5
-                          : 133,
-                      // height: (MediaQuery.of(context).size.width) / 8,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          highlightColor: Colors.transparent,
-                          borderRadius: BorderRadius.circular(10),
-                          onTap: () async {
-                            CubeType optionWanted =
-                                CubeType.values[widget.addingIndex + index];
-                            if (optionWanted != actualPuzzleOption) {
-                              await _removeOverlay();
-                              if (mounted) {
-                                ref
-                                    .read(puzzleOptionsProvider.notifier)
-                                    .setPuzzleOption(
-                                      widget.addingIndex + index,
-                                    );
-                                context.pop();
-                              }
-                            }
-                          },
-                          splashColor: Colors.transparent,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              iconList[widget.addingIndex + index],
-                              SizedBox(height: 5),
-                              Text(
-                                '${widget.addingIndex + index + 2}x${widget.addingIndex + index + 2} Cube',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                }
+              },
+              child: Container(
+                //container for every children
+                key: key,
+                width: (MediaQuery.of(context).size.width < 500)
+                    ? (MediaQuery.of(context).size.width) / 3.5
+                    : 133,
+                // height: (MediaQuery.of(context).size.width) / 8,
+                height: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    iconList[widget.addingIndex + index],
+                    SizedBox(height: 5),
+                    Text(
+                      '${widget.addingIndex + index + 2}x${widget.addingIndex + index + 2} Cube',
+                      style: TextStyle(fontSize: 12),
                     ),
                   ],
                 ),
