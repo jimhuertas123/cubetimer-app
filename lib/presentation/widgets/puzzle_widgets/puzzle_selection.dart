@@ -6,21 +6,17 @@ class PuzzleSelection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screen = MediaQuery.of(context).size.width;
-    
 
     return Column(
       key: const Key('puzzle_selection'),
       children: <Widget>[
         const SizedBox(height: 13),
-        ButtonSplash(
+        CustomButtonSplash(
           addingIndex: 0,
-          screen: screen,
           padding: const EdgeInsets.symmetric(horizontal: 0),
         ),
-        ButtonSplash(
+        CustomButtonSplash(
           addingIndex: 3,
-          screen: screen,
           padding: EdgeInsets.all(0),
         ),
         // _buttonScale(3),
