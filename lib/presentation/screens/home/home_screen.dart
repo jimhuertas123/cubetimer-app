@@ -71,6 +71,7 @@ class HomeScreen extends ConsumerWidget {
             onPressedTittle: () => showDialog(
                 context: context,
                 builder: (context) => CustomAlertDialog(
+                      enableHeight: true,
                       tittle: 'Select a puzzle',
                       fontTittleSize: 20.0,
                       context: context,

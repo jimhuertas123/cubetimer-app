@@ -16,7 +16,7 @@ class _TimesContainerState extends ConsumerState<TimesContainer> {
   @override
   Widget build(BuildContext context) {
     final textThemeColor = ref.watch(themeNotifierProvider).actualThemeIndex;
-
+    final Orientation oritation = MediaQuery.of(context).orientation;
     //checks if the actual text color of global theme is black color so the entire
     // content will be rendered with a black background
     bool isBlackThemeColor = textThemeColor == 1 || textThemeColor == 13;
@@ -40,9 +40,9 @@ class _TimesContainerState extends ConsumerState<TimesContainer> {
                 decelerationRate: ScrollDecelerationRate.normal,
               ),
               padding: const EdgeInsets.only(top: 10),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 mainAxisExtent: 66,
-                crossAxisCount: 3,
+                crossAxisCount: oritation == Orientation.portrait ? 3 : 6,
                 childAspectRatio: 3 / 1,
               ),
               itemCount: 100,
@@ -96,23 +96,9 @@ class _TimesContainerState extends ConsumerState<TimesContainer> {
                         selectedIndices.isEmpty
                             ? showDialog(
                                 context: context,
-                                builder: (context) => CustomAlertDialog(
-                                        tittle: 'App theme',
-                                        fontTittleSize: 20.0,
-                                        context: context,
-                                        insetPadding:
-                                            const EdgeInsets.symmetric(
-                                                horizontal: 30),
-                                        contentPadding: const EdgeInsets.only(
-                                            right: 0,
-                                            left: 0,
-                                            top: 15,
-                                            bottom: 0),
-                                        content: <Widget>[
-                                          Container(
-                                            color: Colors.red,
-                                          )
-                                        ]))
+                                builder: (context) => ShowTimerRecordedDialog(
+                                    context: context, index: index))
+                            // ) showTimeRecordedDialog(context, index)
                             : (selectedIndices.contains(index))
                                 ? setState(() {
                                     selectedIndices.remove(index);
@@ -196,6 +182,13 @@ class _TimesContainerState extends ConsumerState<TimesContainer> {
       ]),
     );
   }
+
+  // Future<dynamic> showTimeRecordedDialog(BuildContext context, int index) {
+  //   bool showImage = false;
+  //   return showDialog(
+  //     context: context,
+  //     builder: (context) =>
+  // }
 
   Container _searchTimesBar(bool isBlackThemeColor) => Container(
         margin: const EdgeInsets.only(top: 10.0, left: 8.0, right: 8.0),
@@ -290,6 +283,199 @@ class _TimesContainerState extends ConsumerState<TimesContainer> {
           ],
         ),
       );
+}
+
+class ShowTimerRecordedDialog extends StatefulWidget {
+  final BuildContext context;
+  final int index;
+
+  const ShowTimerRecordedDialog(
+      {super.key, required this.context, required this.index});
+
+  @override
+  State<ShowTimerRecordedDialog> createState() =>
+      _ShowTimerRecordedDialogState();
+}
+
+class _ShowTimerRecordedDialogState extends State<ShowTimerRecordedDialog> {
+  bool showImage = false;
+
+  @override
+  Widget build(BuildContext context) {
+    print(MediaQuery.of(context).size.width);
+
+    return CustomAlertDialog(
+      enableHeight: false,
+      fontTittleSize: 20.0,
+      context: widget.context,
+      insetPadding: const EdgeInsets.symmetric(horizontal: 0),
+      contentPadding:
+          const EdgeInsets.only(right: 0, left: 0, top: 0, bottom: 0),
+      tittleContent: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            //time recorded
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  "19.",
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "36",
+                  style: TextStyle(
+                      fontSize: 26, fontWeight: FontWeight.bold, height: 1.45),
+                )
+              ],
+            ),
+
+            //date recorded
+            Row(
+              children: [
+                Icon(Icons.date_range_outlined, size: 20),
+                SizedBox(width: 5),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("22 Feb 2025", style: TextStyle(fontSize: 11)),
+                    Text("14:44", style: TextStyle(fontSize: 11)),
+                  ],
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+      content: <Widget>[
+        Divider(
+          height: 1,
+          thickness: 1,
+          color: Colors.black12,
+        ),
+        Column(
+          children: <Widget>[
+            Visibility(
+                maintainSize: false,
+                visible: widget.index == 1,
+                child: Container(
+                  padding: EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 10),
+                  child: Row(
+                    children: [
+                      SizedBox(width: 10),
+                      Icon(Icons.comment_outlined, size: 20),
+                      SizedBox(width: 15),
+                      Text("Comments", style: TextStyle(fontSize: 15)),
+                    ],
+                  ),
+                )),
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  showImage = !showImage;
+                });
+              },
+              child: Container(
+                padding: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
+                child: Row(
+                  children: [
+                    SizedBox(width: 10),
+                    Icon(Icons.casino_outlined, size: 20),
+                    SizedBox(width: 15),
+                    SizedBox(
+                      width:  MediaQuery.of(context).size.width > 450 
+                        ? MediaQuery.of(context).size.width - 680
+                        : MediaQuery.of(context).size.width - 170,
+                      child: Text(
+                        "R' U 2F M 2F 2B 2R L R F' 2B 2R L R F' asdasd",
+                        style: TextStyle(fontSize: 15),
+                        overflow: TextOverflow.visible,
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      size: 20,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            AnimatedSize(
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              child: showImage
+                  ? Container(
+                      margin: EdgeInsets.only(left: 40, bottom: 20),
+                      child: Image.asset(
+                        'assets/category/ic_3x3.png',
+                        height: 100,
+                        width: 100,
+                      ),
+                    )
+                  : SizedBox.shrink(),
+            ),
+          ],
+        ),
+        Divider(
+          height: 1,
+          thickness: 1,
+          color: Colors.black12,
+        ),
+      ],
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.all(0),
+                shape: const CircleBorder(),
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+                overlayColor: Colors.black
+              ),
+              onPressed: () {}, child: Icon(Icons.more_horiz, color: Colors.black)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                SizedBox(
+                  width: 40,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(0),
+                      shape: const CircleBorder(),
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      overlayColor: Colors.black
+                    ),
+                    onPressed: () {},
+                    child: Icon(Icons.comment_outlined, color: Colors.black)),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(right: 10),
+                  width: 40,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(0),
+                      shape: const CircleBorder(),
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      overlayColor: Colors.black
+                    ),
+                    onPressed: () {},
+                    child: Icon(Icons.flag_outlined, color: Colors.black)),
+                ),
+              ],
+            ),
+          ],
+        )
+      ],
+    );
+  }
 }
 
 class DeleteTimesNavigation extends StatefulWidget {

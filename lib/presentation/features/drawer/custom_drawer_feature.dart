@@ -172,6 +172,7 @@ class DrawerHome extends ConsumerWidget {
             showDialog(
                 context: context,
                 builder: (context) => CustomAlertDialog(
+                  enableHeight: true,
                   tittle: 'App theme',
                   fontTittleSize: 20.0,
                   context: context,
