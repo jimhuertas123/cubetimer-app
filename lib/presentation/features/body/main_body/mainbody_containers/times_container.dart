@@ -1,7 +1,29 @@
+import 'package:cube_timer_2/config/test-data/times_recorded.dart';
 import 'package:cube_timer_2/presentation/providers/providers.dart';
 import 'package:cube_timer_2/presentation/widgets/alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+String getMonthAbbreviation(String month) {
+  const monthAbbreviations = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+  ];
+  final monthInt = int.tryParse(month);
+  return (monthInt != null && monthInt >= 1 && monthInt <= 12)
+      ? monthAbbreviations[monthInt - 1]
+      : '';
+}
 
 class TimesContainer extends ConsumerStatefulWidget {
   const TimesContainer({super.key});
@@ -45,7 +67,7 @@ class _TimesContainerState extends ConsumerState<TimesContainer> {
                 crossAxisCount: oritation == Orientation.portrait ? 3 : 6,
                 childAspectRatio: 3 / 1,
               ),
-              itemCount: 100,
+              itemCount: timesRecorded.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onLongPress: () {
@@ -97,7 +119,14 @@ class _TimesContainerState extends ConsumerState<TimesContainer> {
                             ? showDialog(
                                 context: context,
                                 builder: (context) => ShowTimerRecordedDialog(
-                                    context: context, index: index))
+                                  context: context,
+                                  comments: timesRecorded[index].comment,
+                                  recordedDate: timesRecorded[index].recordedDate,
+                                  recordedTime: timesRecorded[index].recordedTime,
+                                  solveTime: timesRecorded[index].solveTime,
+                                  scramble: timesRecorded[index].scramble,
+                                  penalty: timesRecorded[index].penalty,
+                                ))
                             // ) showTimeRecordedDialog(context, index)
                             : (selectedIndices.contains(index))
                                 ? setState(() {
@@ -112,8 +141,10 @@ class _TimesContainerState extends ConsumerState<TimesContainer> {
                         Row(
                           children: <Widget>[
                             SizedBox(width: 8),
+                            //date of the timer
                             Text(
-                              "${index + 1}${index + 1}/${index + 1}${index + 1}",
+                              // "${index + 1}${index + 1}/${index + 1}${index + 1}",
+                              timesRecorded[index].recordedDate.date,
                               style: TextStyle(
                                 fontSize: 11,
                                 height: 1,
@@ -123,8 +154,12 @@ class _TimesContainerState extends ConsumerState<TimesContainer> {
                               ),
                             ),
                             Expanded(child: Container()),
+                            //
                             Text(
-                              "+${index + 1}",
+                              // "+${index + 1}",
+                              timesRecorded[index].penalty == Penalty.plusTwo
+                                  ? "+2"
+                                  : "",
                               style: TextStyle(
                                 color: Colors.red,
                                 fontSize: 11,
@@ -139,8 +174,13 @@ class _TimesContainerState extends ConsumerState<TimesContainer> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
+                            //time recorded
                             Text(
-                              '1:23',
+                              timesRecorded[index].penalty == Penalty.dnf
+                              ? "DNF"
+                              : timesRecorded[index].solveTime.minutes != "0"
+                                  ? "${timesRecorded[index].solveTime.minutes}:${timesRecorded[index].solveTime.seconds}"
+                                  : timesRecorded[index].solveTime.seconds,
                               style: TextStyle(
                                 color: !isBlackThemeColor
                                     ? Colors.black
@@ -150,7 +190,9 @@ class _TimesContainerState extends ConsumerState<TimesContainer> {
                               ),
                             ),
                             Text(
-                              ".10",
+                              timesRecorded[index].penalty == Penalty.dnf 
+                               ? ""
+                               : ".${timesRecorded[index].solveTime.milliseconds}",
                               style: TextStyle(
                                   color: !isBlackThemeColor
                                       ? Colors.black
@@ -161,16 +203,19 @@ class _TimesContainerState extends ConsumerState<TimesContainer> {
                             )
                           ],
                         ),
-                        Container(
-                            margin: const EdgeInsets.only(left: 8),
-                            alignment: Alignment.centerLeft,
-                            child: Icon(
-                              Icons.comment_outlined,
-                              size: 13,
-                              color: !isBlackThemeColor
-                                  ? Colors.black
-                                  : Colors.white70,
-                            ))
+                        Visibility(
+                          visible: timesRecorded[index].comment != "",
+                          child: Container(
+                              margin: const EdgeInsets.only(left: 8),
+                              alignment: Alignment.centerLeft,
+                              child: Icon(
+                                Icons.comment_outlined,
+                                size: 13,
+                                color: !isBlackThemeColor
+                                    ? Colors.black
+                                    : Colors.white70,
+                              )),
+                        )
                       ]),
                     ),
                   ),
@@ -182,13 +227,6 @@ class _TimesContainerState extends ConsumerState<TimesContainer> {
       ]),
     );
   }
-
-  // Future<dynamic> showTimeRecordedDialog(BuildContext context, int index) {
-  //   bool showImage = false;
-  //   return showDialog(
-  //     context: context,
-  //     builder: (context) =>
-  // }
 
   Container _searchTimesBar(bool isBlackThemeColor) => Container(
         margin: const EdgeInsets.only(top: 10.0, left: 8.0, right: 8.0),
@@ -287,10 +325,23 @@ class _TimesContainerState extends ConsumerState<TimesContainer> {
 
 class ShowTimerRecordedDialog extends StatefulWidget {
   final BuildContext context;
-  final int index;
+  final String comments;
+  final Date recordedDate;
+  final Time recordedTime;
+  final SolveTime solveTime;
+  final String scramble;
+  final Penalty penalty;
 
   const ShowTimerRecordedDialog(
-      {super.key, required this.context, required this.index});
+      {super.key,
+      required this.context,
+      required this.comments,
+      required this.scramble, 
+      required this.penalty, 
+      required this.recordedDate,
+      required this.recordedTime,
+      required this.solveTime
+    });
 
   @override
   State<ShowTimerRecordedDialog> createState() =>
@@ -302,8 +353,6 @@ class _ShowTimerRecordedDialogState extends State<ShowTimerRecordedDialog> {
 
   @override
   Widget build(BuildContext context) {
-    print(MediaQuery.of(context).size.width);
-
     return CustomAlertDialog(
       enableHeight: false,
       fontTittleSize: 20.0,
@@ -328,6 +377,20 @@ class _ShowTimerRecordedDialogState extends State<ShowTimerRecordedDialog> {
                   "36",
                   style: TextStyle(
                       fontSize: 26, fontWeight: FontWeight.bold, height: 1.45),
+                ),
+                SizedBox(width: 5),
+                Text(
+                  widget.penalty == Penalty.noPenalty 
+                    ? ""
+                    : widget.penalty == Penalty.dnf
+                      ? "DNF"
+                      : "+2",
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    height: 2,
+                    color: Colors.red
+                  ),
                 )
               ],
             ),
@@ -341,8 +404,10 @@ class _ShowTimerRecordedDialogState extends State<ShowTimerRecordedDialog> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("22 Feb 2025", style: TextStyle(fontSize: 11)),
-                    Text("14:44", style: TextStyle(fontSize: 11)),
+                    Text(
+                        "${widget.recordedDate.day} ${getMonthAbbreviation(widget.recordedDate.month)} ${widget.recordedDate.year}",
+                        style: TextStyle(fontSize: 11)),
+                    Text(widget.recordedTime.time, style: TextStyle(fontSize: 11)),
                   ],
                 )
               ],
@@ -360,15 +425,16 @@ class _ShowTimerRecordedDialogState extends State<ShowTimerRecordedDialog> {
           children: <Widget>[
             Visibility(
                 maintainSize: false,
-                visible: widget.index == 1,
+                visible: widget.comments != "",
                 child: Container(
-                  padding: EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 10),
+                  padding:
+                      EdgeInsets.only(left: 10, right: 10, top: 15, bottom: 10),
                   child: Row(
                     children: [
                       SizedBox(width: 10),
                       Icon(Icons.comment_outlined, size: 20),
                       SizedBox(width: 15),
-                      Text("Comments", style: TextStyle(fontSize: 15)),
+                      Text(widget.comments, style: TextStyle(fontSize: 15)),
                     ],
                   ),
                 )),
@@ -379,18 +445,19 @@ class _ShowTimerRecordedDialogState extends State<ShowTimerRecordedDialog> {
                 });
               },
               child: Container(
-                padding: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
+                padding:
+                    EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
                 child: Row(
                   children: [
                     SizedBox(width: 10),
                     Icon(Icons.casino_outlined, size: 20),
                     SizedBox(width: 15),
                     SizedBox(
-                      width:  MediaQuery.of(context).size.width > 450 
-                        ? MediaQuery.of(context).size.width - 680
-                        : MediaQuery.of(context).size.width - 170,
+                      width: MediaQuery.of(context).size.width > 450
+                          ? MediaQuery.of(context).size.width - 680
+                          : MediaQuery.of(context).size.width - 170,
                       child: Text(
-                        "R' U 2F M 2F 2B 2R L R F' 2B 2R L R F' asdasd",
+                        widget.scramble,
                         style: TextStyle(fontSize: 15),
                         overflow: TextOverflow.visible,
                       ),
@@ -431,43 +498,41 @@ class _ShowTimerRecordedDialogState extends State<ShowTimerRecordedDialog> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(0),
-                shape: const CircleBorder(),
-                backgroundColor: Colors.transparent,
-                shadowColor: Colors.transparent,
-                overlayColor: Colors.black
-              ),
-              onPressed: () {}, child: Icon(Icons.more_horiz, color: Colors.black)),
+                style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.all(0),
+                    shape: const CircleBorder(),
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    overlayColor: Colors.black),
+                onPressed: () {},
+                child: Icon(Icons.more_horiz, color: Colors.black)),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 SizedBox(
                   width: 40,
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(0),
-                      shape: const CircleBorder(),
-                      backgroundColor: Colors.transparent,
-                      shadowColor: Colors.transparent,
-                      overlayColor: Colors.black
-                    ),
-                    onPressed: () {},
-                    child: Icon(Icons.comment_outlined, color: Colors.black)),
+                      style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.all(0),
+                          shape: const CircleBorder(),
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          overlayColor: Colors.black),
+                      onPressed: () {},
+                      child: Icon(Icons.comment_outlined, color: Colors.black)),
                 ),
                 Container(
                   margin: const EdgeInsets.only(right: 10),
                   width: 40,
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(0),
-                      shape: const CircleBorder(),
-                      backgroundColor: Colors.transparent,
-                      shadowColor: Colors.transparent,
-                      overlayColor: Colors.black
-                    ),
-                    onPressed: () {},
-                    child: Icon(Icons.flag_outlined, color: Colors.black)),
+                      style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.all(0),
+                          shape: const CircleBorder(),
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          overlayColor: Colors.black),
+                      onPressed: () {},
+                      child: Icon(Icons.flag_outlined, color: Colors.black)),
                 ),
               ],
             ),
