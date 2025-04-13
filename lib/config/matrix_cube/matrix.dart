@@ -1,37 +1,30 @@
-enum Type{
-  cube2x2,
-  cube3x3,
-  cube4x4,
-  cube5x5,
-  cube6x6,
-  cube7x7
-}
+import '../puzzle_options/puzzle_options_enum.dart';
 
 ///Given a Type enum(Type.cube2x2, Type.cube3x3...) return an int from the respect type(2,3...)
-Map<Type, int> nCubeType = {
-  Type.cube2x2:2,
-  Type.cube3x3:3,
-  Type.cube4x4:4,
-  Type.cube5x5:5,
-  Type.cube6x6:6,
-  Type.cube7x7:7
+Map<CubeType, int> nCubeType = {
+  CubeType.cube2x2:2,
+  CubeType.cube3x3:3,
+  CubeType.cube4x4:4,
+  CubeType.cube5x5:5,
+  CubeType.cube6x6:6,
+  CubeType.cube7x7:7
 };
 
-Map<int,Type> intToType = {
-  2:Type.cube2x2,
-  3:Type.cube3x3,
-  4:Type.cube4x4,
-  5:Type.cube5x5,
-  6:Type.cube6x6,
-  7:Type.cube7x7
+Map<int,CubeType> intToType = {
+  2:CubeType.cube2x2,
+  3:CubeType.cube3x3,
+  4:CubeType.cube4x4,
+  5:CubeType.cube5x5,
+  6:CubeType.cube6x6,
+  7:CubeType.cube7x7
 };
 
 class Matrix {
   List<List<int>> _matrix = List.generate(1, (i) => []);
-  Type? type;
+  CubeType? type;
   int? length;
 
-  Matrix(Type typeCube, int element){
+  Matrix(CubeType typeCube, int element){
     type= typeCube;
     _matrix = List.generate(nCubeType[type]!, (index) => []);
     for(var i=0; i<nCubeType[type]!; i++){
@@ -42,13 +35,14 @@ class Matrix {
   }
   
   void printMatrix(){
+    // ignore: unused_local_variable
     String aux = "";
     for(var i=0; i<_matrix.length; i++){
       for(var j=0; j<_matrix[i].length; j++){
         aux += _matrix[i][j].toString();
         aux += " ";
       }
-      print(aux);
+      // debugPrint(aux);
       aux = "";
     }
   }

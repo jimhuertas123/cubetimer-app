@@ -39,7 +39,6 @@ class ThemeNotifier extends StateNotifier<AppTheme> {
   }
 
   void changeThemeColorIndex(int indexThemeColor) {
-    print(state.actualTextThemeIndex);
     state = state.copyWith(
       actualThemeIndex: indexThemeColor
     );
