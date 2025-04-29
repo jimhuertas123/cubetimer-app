@@ -9,6 +9,7 @@ class AppBarHome extends StatefulWidget implements PreferredSizeWidget {
   final int? actualPageIndex;
   final void Function()? onPressedDrawer;
   final void Function()? onPressedTittle;
+  final void Function()? onPressedCategory;
   final bool isTimerRunnin;
 
   final String tittle;
@@ -19,6 +20,7 @@ class AppBarHome extends StatefulWidget implements PreferredSizeWidget {
     super.key,
     required this.onPressedDrawer,
     required this.onPressedTittle,
+    required this.onPressedCategory,
     required this.themeColor,
     required this.textColor,
     required this.scaffoldKey,

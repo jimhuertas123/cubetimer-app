@@ -1,6 +1,7 @@
 // import 'package:cube_timer_v2/config/config.dart';
 import 'package:cube_timer_2/config/config.dart';
 import 'package:cube_timer_2/config/puzzle_options/puzzle_options_enum.dart';
+import 'package:cube_timer_2/database/models/category_model.dart';
 import 'package:cube_timer_2/presentation/features/features.dart';
 import 'package:cube_timer_2/presentation/providers/providers.dart';
 import 'package:cube_timer_2/presentation/providers/puzzle_options_provider.dart';
@@ -13,12 +14,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
+
+///It is the main screen of the app
+///in contains the appBar, body and bottom navigation bar
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
   // final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
     //gemeral config theme
     final bool isDarkMode = ref.watch(themeNotifierProvider).isDarkmode;
     final int actualThemeIndex =
@@ -26,7 +31,7 @@ class HomeScreen extends ConsumerWidget {
     final int actualTextColorIndex =
         ref.watch(themeNotifierProvider).actualTextThemeIndex;
 
-    //automatic scroll purpose
+    //automatic scroll purpose -when scrolling pageview- 
     final indexPage = ref.watch(pageIndexProviderInt);
     final PageController pageController = PageController(
       keepPage: true,
@@ -81,6 +86,18 @@ class HomeScreen extends ConsumerWidget {
                         PuzzleSelection(),
                       ],
                     )),
+
+            onPressedCategory: () => showDialog(
+              context: context, 
+              builder: (context) 
+                => CustomAlertDialog(
+                  context: context,
+                  
+                  content: const <Widget>[
+                    
+                  ],
+              )
+            ),
           ),
           body: _getBodyContent(
               pageController,
