@@ -1,6 +1,23 @@
 import 'package:flutter/widgets.dart';
 import 'dart:math' as math;
 
+/// A custom scroll physics that applies an elastic effect when the user
+/// scrolls beyond the boundaries of the scrollable content.
+///
+/// This class extends [PageScrollPhysics] and overrides the necessary methods
+/// to provide a custom scrolling behavior.
+///
+/// The elastic effect is achieved by applying a friction factor to the user
+/// offset when the scroll position is at the edge of the scrollable content.
+///
+/// - `applyTo`: Creates a copy of this physics object with the given ancestor.
+/// - `applyPhysicsToUserOffset`: Applies a friction factor to the user offset
+///   when the scroll position is at the edge.
+/// - `applyBoundaryConditions`: Determines the overscroll amount when the
+///   scroll position goes beyond the boundaries.
+///
+/// You can measure how much the scroll effect stretches by adjusting the
+/// `frictionFactor` in the `applyPhysicsToUserOffset` method.
 class ElasticScrollPhysics extends PageScrollPhysics {
   const ElasticScrollPhysics({super.parent});
 

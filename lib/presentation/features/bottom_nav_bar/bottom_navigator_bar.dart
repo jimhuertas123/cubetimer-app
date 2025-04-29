@@ -3,10 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CustomBottomNavigationBar extends ConsumerWidget {
+class CustomBottomNavigationBar extends ConsumerStatefulWidget {
   final Color backgroundColor;
   final Color activeIconColor;
   final Color inactiveIconColor;
+  final bool isTimerRunning;
   final PageController pageController;
   final void Function(int) onTap;
   const CustomBottomNavigationBar(
@@ -15,32 +16,90 @@ class CustomBottomNavigationBar extends ConsumerWidget {
       required this.activeIconColor,
       required this.inactiveIconColor,
       required this.pageController,
+      required this.isTimerRunning,
       required this.onTap});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) { 
+  ConsumerState<ConsumerStatefulWidget> createState() => _CustomBottomNavigationBarState();
+}
+
+class _CustomBottomNavigationBarState extends ConsumerState<CustomBottomNavigationBar> with SingleTickerProviderStateMixin {
+
+  late AnimationController _animationController;
+  late Animation<Offset> _slideAnimation;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 400),
+      reverseDuration: const Duration(milliseconds: 400),
+      vsync: this,
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: Offset.zero,
+      end: const Offset(0, 1),
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+
+    _fadeAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOutBack,
+    ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
     int actualIndexPage = ref.watch(pageIndexProviderInt);
 
+    if (widget.isTimerRunning) {
+      _animationController.forward();
+    } else {
+      _animationController.reverse();
+    }
+
     return Theme.of(context).platform == TargetPlatform.iOS
-        ? IosTabBar(
-            backgroundColor: backgroundColor,
-            activeIconColor: activeIconColor,
-            inactiveIconColor: inactiveIconColor,
-            actualIndexPage: actualIndexPage,
-            pageController: pageController,
-            onTap: onTap
-          )
-        : AndroidBottomNavBar(
-            backgroundColor: backgroundColor,
-            activeIconColor: activeIconColor,
-            inactiveIconColor: inactiveIconColor,
-            pageController: pageController,
-            actualIndexPage: actualIndexPage,
-            onTap: onTap
-          );
+      ? SlideTransition(
+        position: _slideAnimation,
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: IosTabBar(
+              backgroundColor: widget.backgroundColor,
+              activeIconColor: widget.activeIconColor,
+              inactiveIconColor: widget.inactiveIconColor,
+              actualIndexPage: actualIndexPage,
+              pageController: widget.pageController,
+              onTap: widget.onTap
+            ),
+        ),
+      )
+      : SlideTransition(
+        position: _slideAnimation,
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: AndroidBottomNavBar(
+              backgroundColor: widget.backgroundColor,
+              activeIconColor: widget.activeIconColor,
+              inactiveIconColor: widget.inactiveIconColor,
+              pageController: widget.pageController,
+              actualIndexPage: actualIndexPage,
+              onTap: widget.onTap
+            ),
+        ),
+      );
   }
 }
 
+
+///IOS bottom navigation bar
 class IosTabBar extends StatefulWidget {
   final Color backgroundColor;
   final Color activeIconColor;
@@ -108,21 +167,20 @@ class _IosTabBarState extends State<IosTabBar> {
   }
 }
 
-class AndroidBar extends ConsumerStatefulWidget {
-  const AndroidBar({super.key});
-
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _AndroidBarState();
-}
-
-class _AndroidBarState extends ConsumerState<AndroidBar> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
-
-class AndroidBottomNavBar extends ConsumerStatefulWidget {
+///Android bottom navigation bar
+/// A custom bottom navigation bar for Android that includes three items: Home, Business, and School.
+/// 
+/// This widget is a stateful widget that takes several parameters to customize its appearance and behavior:
+/// 
+/// - `backgroundColor`: The background color of the bottom navigation bar.
+/// - `activeIconColor`: The color of the icon when it is selected.
+/// - `inactiveIconColor`: The color of the icon when it is not selected.
+/// - `actualIndexPage`: The index of the currently selected page.
+/// - `pageController`: A controller to manage the pages.
+/// - `onTap`: A callback function that is called when an item is tapped.
+/// 
+/// The bottom navigation bar has a rounded top border and a shadow effect.
+class AndroidBottomNavBar extends StatefulWidget {
   final Color backgroundColor;
   final Color activeIconColor;
   final Color inactiveIconColor;
@@ -139,11 +197,10 @@ class AndroidBottomNavBar extends ConsumerStatefulWidget {
       required this.onTap});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _AndroidBottomNavBarState();
+  State<AndroidBottomNavBar> createState() => _AndroidBottomNavBarState();
 }
 
-class _AndroidBottomNavBarState extends ConsumerState<AndroidBottomNavBar> {
+class _AndroidBottomNavBarState extends State<AndroidBottomNavBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
