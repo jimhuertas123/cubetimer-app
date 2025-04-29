@@ -9,6 +9,11 @@ class CategoryRepository {
     await db.insert('Category', category.toMap());
   }
 
+  /// Class Category{
+  /// \@required int id,
+  /// \@required String name,
+  /// \@required int cubeTypeId,
+  /// \@required CubeType cubeType,}
   Future<List<CategoryModel>> getCategories(int cubeTypeId) async {
     final db = await _databaseHelper.database;
     final List<Map<String, dynamic>> maps = await db.query(
@@ -19,5 +24,15 @@ class CategoryRepository {
     return List.generate(maps.length, (i) {
       return CategoryModel.fromMap(maps[i]);
     });
+  }
+
+  Future<void> updateCategory(CategoryModel category) async {
+    final db = await _databaseHelper.database;
+    await db.update(
+      'Category',
+      category.toMap(),
+      where: 'id = ?',
+      whereArgs: [category.id],
+    );
   }
 }
