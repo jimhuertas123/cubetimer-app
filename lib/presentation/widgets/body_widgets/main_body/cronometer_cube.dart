@@ -180,117 +180,113 @@ class _CronometerCubeState extends ConsumerState<CronometerCube>
                 debugPrint("isRunning: $isRunning"),
                 startTimer(isRunning)
               },
-          child: Container(
-            color: Colors.transparent,
-            child: Stack(
-              children: [
-                AnimatedBuilder(
-                  animation: _circleScaleAnimation,
-                  builder: (context, child) {
-                    return Visibility(
-                      visible: !isRunning && brokedNewRecord,
-                      child: Center(
-                        child: Transform.scale(
-                          scale: _circleScaleAnimation.value,
-                          child: Opacity(
-                            opacity: _circleOpacityAnimation.value,
-                            child: Container(
-                              width: double.infinity,
-                              height: double.infinity,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.green,
+          child: SafeArea(
+            child: Container(
+              margin: EdgeInsets.only(top: 10),
+              color: Colors.transparent,
+              child: Stack(
+                children: [
+                  AnimatedBuilder(
+                    animation: _circleScaleAnimation,
+                    builder: (context, child) {
+                      return Visibility(
+                        visible: !isRunning && brokedNewRecord,
+                        child: Center(
+                          child: Transform.scale(
+                            scale: _circleScaleAnimation.value,
+                            child: Opacity(
+                              opacity: _circleOpacityAnimation.value,
+                              child: Container(
+                                width: double.infinity,
+                                height: double.infinity,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.green,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-                Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      //Extra space instead of using padding or margin that makes it loosing touching detection
-                      Container(height: widget.containerHeight > 400 
-                        ? 130 
-                        : 100
-                      ),
-            
-                      //SCRAMBLE
-                      SlideTransition(
-                        position: _slideAnimationScramble,
-                        child: FadeTransition(
-                          opacity: _fadeAnimation,
-                          child: ScrambleInfo(
-                              containerHeight: widget.containerHeight,
-                              scrambleHeight: scrambleHeight,
-                              widget: widget,
-                              colorTextTheme: colorTextTheme),
-                        ),
-                      ),
-            
-                      //CRONOMETER
-                      CronometerTime(
-                          scaleAnimation: _scaleAnimation,
-                          buttonScaleAnimation: _buttonScaleAnimation,
-                          textColor: colorTextTheme,
-                          isTimerRunning: isRunning,
-                          breakNewRecord: brokedNewRecord,
-                          containerHeight: widget.containerHeight,
-                          timer: _timer,
-                          height: cronometerHeight + 60,
-                          fontSize: widget.containerHeight > 400
-                            ? widget.fontSize
-                            : widget.fontSize * 0.6),
-            
-                      //RESULTS
-                      SlideTransition(
-                        position: _slideAnimationResults,
-                        child: FadeTransition(
-                          opacity: _fadeAnimation,
-                          child: CronometerResults(
-                              buttonScaleAnimation: _buttonScaleAnimation,
-                              isRunning: isRunning,
-                              breakNewRecord: brokedNewRecord,
-                              textColor: colorTextTheme),
-                        ),
-                      ),
-                    ],
+                      );
+                    },
                   ),
-                ),
-                Positioned(
-                  right: 3,
-                  bottom:widget.containerHeight > 400 
-                    ? 108
-                    : 110,
-                  child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 1,
-                    horizontal: 14,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: !isRunning && brokedNewRecord
-                          ? colorTextTheme
-                          : Colors.transparent,
-                      width: 1.5,
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                                    
+                        //SCRAMBLE
+                        SlideTransition(
+                          position: _slideAnimationScramble,
+                          child: FadeTransition(
+                            opacity: _fadeAnimation,
+                            child: ScrambleInfo(
+                                containerHeight: widget.containerHeight,
+                                scrambleHeight: scrambleHeight,
+                                widget: widget,
+                                colorTextTheme: colorTextTheme),
+                          ),
+                        ),
+              
+                        //CRONOMETER
+                        CronometerTime(
+                            scaleAnimation: _scaleAnimation,
+                            buttonScaleAnimation: _buttonScaleAnimation,
+                            textColor: colorTextTheme,
+                            isTimerRunning: isRunning,
+                            breakNewRecord: brokedNewRecord,
+                            containerHeight: widget.containerHeight,
+                            timer: _timer,
+                            height: cronometerHeight,
+                            fontSize: widget.containerHeight > 400
+                              ? widget.fontSize
+                              : widget.fontSize * 0.6),
+              
+                        //RESULTS
+                        SlideTransition(
+                          position: _slideAnimationResults,
+                          child: FadeTransition(
+                            opacity: _fadeAnimation,
+                            child: CronometerResults(
+                                buttonScaleAnimation: _buttonScaleAnimation,
+                                isRunning: isRunning,
+                                breakNewRecord: brokedNewRecord,
+                                textColor: colorTextTheme),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  child: Text(
-                    !isRunning && brokedNewRecord
-                        ? "¡New Average Best!"
-                        : "",
-                    style: TextStyle(
-                      color: colorTextTheme,
-                      fontSize: 11
+                  Positioned(
+                    right: 3,
+                    bottom: 80,
+                    child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 1,
+                      horizontal: 14,
                     ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: !isRunning && brokedNewRecord
+                            ? colorTextTheme
+                            : Colors.transparent,
+                        width: 1.5,
+                      ),
+                    ),
+                    child: Text(
+                      !isRunning && brokedNewRecord
+                          ? "¡New Average Best!"
+                          : "",
+                      style: TextStyle(
+                        color: colorTextTheme,
+                        fontSize: 11
+                      ),
+                    ),
+                  ), 
                   ),
-                ), 
-                ),
-              ],
+                ],
+              ),
             ),
           )),
     );
@@ -498,7 +494,7 @@ class _CronometerResultsState extends State<CronometerResults> {
         alignment: Alignment.bottomCenter,
         margin: const EdgeInsets.symmetric(horizontal: 5),
         width: double.infinity,
-        height: 110,
+        height: 80,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end, 
           children: [
@@ -563,10 +559,7 @@ class CronometerTime extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: containerHeight > 400 
-        ? height + 35
-        : height - 15,
+    return Expanded(
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -710,14 +703,14 @@ class CronometerTime extends StatelessWidget {
                         hoverColor: Colors.transparent,
                         focusColor: Colors.transparent,
                         onPressed: () {},
-                      ),
-                      
+                      ),                      
                     ],
                   ),
                 ),
               ),
             ),
-          ]),
+          ]
+        ),
     );
   }
 }

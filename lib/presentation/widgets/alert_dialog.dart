@@ -8,16 +8,22 @@ class CustomAlertDialog extends StatelessWidget {
   final double fontTittleSize;
   final EdgeInsetsGeometry? contentPadding;
   final EdgeInsets insetPadding;
+  final Widget tittleContent;
+  final double? height;
+  final bool enableHeight;
 
   const CustomAlertDialog(
       {super.key,
       required this.content,
       required this.context,
+      required this.enableHeight,
+      this.tittle = "",
       this.actions,
       this.fontTittleSize = 20,
-      this.tittle = 'Tittle Example',
       this.contentPadding,
-      this.insetPadding = EdgeInsets.zero});
+      this.insetPadding = EdgeInsets.zero,
+      this.height,
+      this.tittleContent = const SizedBox.shrink()});
 
   @override
   Widget build(BuildContext context) {
@@ -26,14 +32,16 @@ class CustomAlertDialog extends StatelessWidget {
       insetPadding: insetPadding,
       contentPadding: const EdgeInsets.only(top: 5.0, bottom: 0),
       titlePadding: const EdgeInsets.only(top: 10),
-      title: Text(
-        tittle,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: fontTittleSize,
-            color: Colors.black),
-      ),
+      title: tittle.isEmpty
+          ? tittleContent
+          : Text(
+              tittle,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: fontTittleSize,
+                  color: Colors.black),
+            ),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(20.0)),
       ),
@@ -43,9 +51,7 @@ class CustomAlertDialog extends StatelessWidget {
         return Container(
           // color: Colors.red,
           padding: contentPadding,
-          height: (MediaQuery.of(context).size.height > 500) 
-            ? 472
-            : 300,
+          height: enableHeight ? (MediaQuery.of(context).size.height > 500 ? height ?? 472 : 300) : null,
           width: (MediaQuery.of(context).size.width < 400)
               ? MediaQuery.of(context).size.width - 50
               : 400,
