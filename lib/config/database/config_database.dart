@@ -1,7 +1,5 @@
 
-// ignore_for_file: non_constant_identifier_names
-
-String DATABASE_NAME = 'cube_timer.db';
+const String DATABASE_NAME = 'cube_timer.db';
 
 enum CubeType {
   threeByThree,

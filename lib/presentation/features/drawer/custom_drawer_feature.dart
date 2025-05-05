@@ -125,6 +125,7 @@ class DrawerHome extends ConsumerWidget {
                                 .read(menuOptionsNotifierProvider.notifier)
                                 .changeOption(item.id);
                           }
+                          Navigator.of(context).pop();
                         },
                       ))
             ]),
@@ -172,6 +173,7 @@ class DrawerHome extends ConsumerWidget {
             showDialog(
                 context: context,
                 builder: (context) => CustomAlertDialog(
+                  enableHeight: true,
                   tittle: 'App theme',
                   fontTittleSize: 20.0,
                   context: context,
@@ -181,6 +183,8 @@ class DrawerHome extends ConsumerWidget {
                   content: const <Widget>[ThemeChange()]
               )
             );
+          }else{
+            Navigator.of(context).pop();
           }
           if (id == 0 && selectedOption != 0) {
             ref.read(menuOptionsNotifierProvider.notifier).changeOption(id);

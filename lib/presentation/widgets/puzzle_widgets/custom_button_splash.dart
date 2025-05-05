@@ -108,6 +108,7 @@ class _IOSButtonSplashRowState extends ConsumerState<IOSButtonSplashRow>
         itemBuilder: (context, index) {
           final isActive = _activeIndex == index;
 
+
           return Center(
             child: GestureDetector(
               onTap: () {
