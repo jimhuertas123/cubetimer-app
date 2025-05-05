@@ -160,8 +160,7 @@ class _AppBarHomeState extends State<AppBarHome> with SingleTickerProviderStateM
                     child: IconButton(
                       iconSize: 25.0,
                       icon: Icon(Icons.category_outlined, color: widget.textColor),
-                      onPressed: (() => debugPrint(
-                          "momento god")), //() async =>showAlertDialogNewCategory(context),),
+                      onPressed: widget.onPressedCategory //() async =>showAlertDialogNewCategory(context),),
                     )),
                 const SizedBox(width: 15)
               ],

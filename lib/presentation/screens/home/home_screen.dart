@@ -1,7 +1,8 @@
 // import 'package:cube_timer_v2/config/config.dart';
 import 'package:cube_timer_2/config/config.dart';
-import 'package:cube_timer_2/config/puzzle_options/puzzle_options_enum.dart';
-import 'package:cube_timer_2/database/models/category_model.dart';
+import 'package:cube_timer_2/config/database/config_database.dart';
+import 'package:cube_timer_2/database/models/cube_type_model.dart';
+import 'package:cube_timer_2/presentation/features/cupertino_modal_popup/create_category_sheet.dart';
 import 'package:cube_timer_2/presentation/features/features.dart';
 import 'package:cube_timer_2/presentation/providers/providers.dart';
 import 'package:cube_timer_2/presentation/providers/puzzle_options_provider.dart';
@@ -11,9 +12,9 @@ import 'package:flutter/material.dart';
 
 import 'package:cube_timer_2/presentation/widgets/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 
 final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
 
 ///It is the main screen of the app
 ///in contains the appBar, body and bottom navigation bar
@@ -23,7 +24,6 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     //gemeral config theme
     final bool isDarkMode = ref.watch(themeNotifierProvider).isDarkmode;
     final int actualThemeIndex =
@@ -31,7 +31,7 @@ class HomeScreen extends ConsumerWidget {
     final int actualTextColorIndex =
         ref.watch(themeNotifierProvider).actualTextThemeIndex;
 
-    //automatic scroll purpose -when scrolling pageview- 
+    //automatic scroll purpose -when scrolling pageview-
     final indexPage = ref.watch(pageIndexProviderInt);
     final PageController pageController = PageController(
       keepPage: true,
@@ -44,8 +44,10 @@ class HomeScreen extends ConsumerWidget {
     final bool isTimerRunning = ref.watch(cronometerRunnerProvider).isRunning;
 
     //appBar category changes
-    final CubeType actualOption =
-        ref.watch(puzzleOptionsProvider).puzzleOption;
+    final CubeTypeModel actualOption =
+        ref.watch(cubeTypeProvider).actualCubeType;
+    final List<CubeTypeModel> appMenuScreensItems =
+        ref.watch(cubeTypeProvider).cubeTypes;
     final String actualCategory =
         ref.watch(puzzleOptionsProvider).puzzleCategory;
 
@@ -59,7 +61,7 @@ class HomeScreen extends ConsumerWidget {
           appBar: AppBarHome(
             isTimerRunnin: isTimerRunning,
             actualPageIndex: indexPage,
-            tittle: cubeTypeToString[actualOption]!,
+            tittle: actualOption.type.name,
             subtittle: actualCategory,
             textColor: (actualTextColorIndex == 0)
                 ? (isDarkMode)
@@ -76,29 +78,108 @@ class HomeScreen extends ConsumerWidget {
             onPressedTittle: () => showDialog(
                 context: context,
                 builder: (context) => CustomAlertDialog(
-                      enableHeight: true,
-                      tittle: 'Select a puzzle',
-                      fontTittleSize: 20.0,
-                      context: context,
-                      insetPadding: const EdgeInsets.symmetric(horizontal: 30),
-                      contentPadding: const EdgeInsets.only(
-                          right: 0, left: 0, top: 0, bottom: 0),
-                      content: const <Widget>[
-                        PuzzleSelection(),
-                      ],
-                    )),
-
-            onPressedCategory: () => showDialog(
-              context: context, 
-              builder: (context) 
-                => CustomAlertDialog(
+                  enableHeight: true,
+                  tittle: 'Select a puzzle',
+                  fontTittleSize: 20.0,
                   context: context,
-                  
-                  content: const <Widget>[
-                    
+                  insetPadding: const EdgeInsets.symmetric(horizontal: 30),
+                  contentPadding: const EdgeInsets.only(
+                      right: 0, left: 0, top: 0, bottom: 0),
+                  content: <Widget>[
+                    PuzzleSelection(
+                      cubeTypes: appMenuScreensItems,
+                    ),
                   ],
-              )
-            ),
+                )),
+            onPressedCategory: () => showDialog(
+                context: context,
+                builder: (context) {
+                  // final List<CategoryModel> actualCategories =
+                  //     ref.watch(categoryProvider.notifier).loadCategoriesForCurrentCubeType(actualOption);
+
+                  return CustomAlertDialog(
+                    enableHeight: false,
+                    insetPadding: EdgeInsets.symmetric(horizontal: 50),
+                    context: context,
+                    tittleContent: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            "Select a category",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              showCustomModal(context, 'Example Modal',
+                                  const Text('Show Modal'));
+                              // showDialog(
+                              //   context: context,
+                              //   builder: (context) => CustomAlertDialog(
+                              //     enableHeight: true,
+                              //     tittle: 'New category',
+                              //     fontTittleSize: 20.0,
+                              //     context: context,
+                              //     insetPadding:
+                              //         const EdgeInsets.symmetric(horizontal: 30),
+                              //     contentPadding: const EdgeInsets.only(
+                              //         right: 0, left: 0, top: 0, bottom: 0),
+                              //     content: const <Widget>[
+                              //       // NewCategory(),
+                              //     ],
+                              //   ),
+                              // );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 8),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: const Color(0xFF2962ff),
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  SvgPicture.asset(
+                                    'assets/icons/ic_add_category.svg',
+                                    width: 22,
+                                    height: 22,
+                                  ),
+                                  SizedBox(width: 7),
+                                  Text(
+                                    "New",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Color(0xFF2962ff),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    content: <Widget>[
+                      Divider(),
+                      // CategoryList(),
+                      Divider(),
+                      Center(
+                          child: Text(
+                        'Long-press an entry to edit',
+                        style: TextStyle(fontSize: 12),
+                      )),
+                      SizedBox(height: 5),
+                    ],
+                  );
+                }),
           ),
           body: _getBodyContent(
               pageController,
@@ -163,5 +244,19 @@ class HomeScreen extends ConsumerWidget {
       default:
         return const Center(child: Text("Selecciona una opción en el Drawer"));
     }
+  }
+}
+
+class CategorySelection extends ConsumerWidget {
+  const CategorySelection({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // final CubeType actualOption =
+    //     ref.watch(puzzleOptionsProvider).puzzleOption;
+    // final List<CategoryModel> categories =
+    //     ref.watch(categoryProvider.notifier).loadCategoriesForCurrentCubeType(actualOption);
+
+    return Container();
   }
 }

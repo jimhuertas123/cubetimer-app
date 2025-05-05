@@ -9,7 +9,7 @@ class CubeTypeModel {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'type': type.name,
+      'type': type,
     };
   }
 
