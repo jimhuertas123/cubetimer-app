@@ -61,7 +61,7 @@ class HomeScreen extends ConsumerWidget {
           appBar: AppBarHome(
             isTimerRunnin: isTimerRunning,
             actualPageIndex: indexPage,
-            tittle: actualOption.type.name,
+            tittle: "${actualOption.type.name} Cube",
             subtittle: actualCategory,
             textColor: (actualTextColorIndex == 0)
                 ? (isDarkMode)
@@ -78,19 +78,29 @@ class HomeScreen extends ConsumerWidget {
             onPressedTittle: () => showDialog(
                 context: context,
                 builder: (context) => CustomAlertDialog(
-                  enableHeight: true,
-                  tittle: 'Select a puzzle',
-                  fontTittleSize: 20.0,
-                  context: context,
-                  insetPadding: const EdgeInsets.symmetric(horizontal: 30),
-                  contentPadding: const EdgeInsets.only(
-                      right: 0, left: 0, top: 0, bottom: 0),
-                  content: <Widget>[
-                    PuzzleSelection(
-                      cubeTypes: appMenuScreensItems,
-                    ),
-                  ],
-                )),
+                      enableHeight: true,
+                      height: 370,
+                      tittleContent: Container(
+                        padding: const EdgeInsets.only(top: 10, bottom: 0),
+                        child: Center(
+                          child: Text("Select a puzzle",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              )),
+                        ),
+                      ),
+                      fontTittleSize: 20.0,
+                      context: context,
+                      insetPadding: const EdgeInsets.symmetric(horizontal: 30),
+                      contentPadding: const EdgeInsets.only(
+                          right: 0, left: 0, top: 0, bottom: 0),
+                      content: <Widget>[
+                        PuzzleSelection(
+                          cubeTypes: appMenuScreensItems,
+                        ),
+                      ],
+                    )),
             onPressedCategory: () => showDialog(
                 context: context,
                 builder: (context) {

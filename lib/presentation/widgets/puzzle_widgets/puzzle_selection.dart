@@ -9,33 +9,50 @@ class PuzzleSelection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      key: const Key('puzzle_selection'),
-      children: <Widget>[
-        const SizedBox(height: 13),
-        // cubeTypes.isNotEmpty
-        //     ? Row(
-        //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //         children: cubeTypes
-        //             .map((cubeType) => CustomButtonSplash(
-        //                   addingIndex: cubeTypes.indexOf(cubeType),
-        //                   padding: const EdgeInsets.symmetric(horizontal: 0),
-        //                 ))
-        //             .toList(),
-        //       )
-        //     : const SizedBox.shrink(),
-        
-    
-        CustomButtonSplash(
-          addingIndex: 0,
-          padding: const EdgeInsets.symmetric(horizontal: 0),
+    return Container(
+      padding: const EdgeInsets.only(top: 6),
+      child: GridView.builder(
+        key: const Key('puzzle_selection'),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          crossAxisSpacing: 0,
+          mainAxisSpacing: 0,
+          childAspectRatio: 1.35,
         ),
-        CustomButtonSplash(
-          addingIndex: 3,
-          padding: EdgeInsets.all(0),
-        ),
-        // _buttonScale(3),
-      ],
+        padding: const EdgeInsets.all(10),
+        itemCount: cubeTypes.length,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(), // Disables scrolling
+        itemBuilder: (context, index) {
+          return CustomButtonSplash(
+            name: cubeTypes[index].type, 
+            index: index,
+            padding: const EdgeInsets.symmetric(horizontal: 0),
+          );
+        },
+      ),
     );
+    
+    
+    
+    // Row(
+    //   key: const Key('puzzle_selection'),
+    //   children: <Widget>[
+    //     const SizedBox(height: 13),
+    //     CustomButtonSplash(
+    //       index: 0,
+    //       padding: const EdgeInsets.symmetric(horizontal: 0),
+    //     ),
+    //     CustomButtonSplash(
+    //       index: 1,
+    //       padding: const EdgeInsets.symmetric(horizontal: 0),
+    //     ),
+    //     CustomButtonSplash(
+    //       index: 3,
+    //       padding: EdgeInsets.all(0),
+    //     ),
+    //     // _buttonScale(3),
+    //   ],
+    // );
   }
 }

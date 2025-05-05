@@ -2,8 +2,8 @@
 const String DATABASE_NAME = 'cube_timer.db';
 
 enum CubeType {
-  threeByThree,
   twoByTwo,
+  threeByThree,
   fourByFour,
   fiveByFive,
   sixBySix,
@@ -13,10 +13,10 @@ enum CubeType {
 extension CubeTypeExtension on CubeType {
   String get name {
     switch (this) {
-      case CubeType.threeByThree:
-        return '3x3';
       case CubeType.twoByTwo:
         return '2x2';
+      case CubeType.threeByThree:
+        return '3x3';
       case CubeType.fourByFour:
         return '4x4';
       case CubeType.fiveByFive:
