@@ -1,4 +1,4 @@
-export 'alert_dialog.dart';
+export 'custom_alert_dialog.dart';
 export 'body_widgets/listview_container.dart';
 export 'body_widgets/main_body/puzzle_drawer.dart';
 export 'body_widgets/main_body/cronometer_cube.dart';

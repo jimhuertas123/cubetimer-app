@@ -240,7 +240,9 @@ class AppTheme {
             'Selected color must be less or equal than ${appColorTheme.length - 1}');
 
   ThemeData getTheme() => ThemeData(
-      cupertinoOverrideTheme: const CupertinoThemeData(brightness: Brightness.dark),
+      cupertinoOverrideTheme: const CupertinoThemeData(
+        brightness: Brightness.dark,
+      ),
       useMaterial3: true,
       brightness: isDarkmode ? Brightness.dark : Brightness.light,
       fontFamily: 'Quicksand',

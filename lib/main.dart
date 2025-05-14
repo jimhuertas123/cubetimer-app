@@ -21,9 +21,9 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AppTheme appTheme = ref.watch(themeNotifierProvider);
     return MaterialApp.router(
-        title: 'Cube Timer',
-        debugShowCheckedModeBanner: false,
-        theme: appTheme.getTheme(),
-        routerConfig: appRouter);
+      title: 'Cube Timer',
+      debugShowCheckedModeBanner: false,
+      theme: appTheme.getTheme(),
+      routerConfig: appRouter);
   }
 }

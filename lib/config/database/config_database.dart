@@ -1,5 +1,35 @@
 
+import 'package:cube_timer_2/database/models/cube_type_model.dart';
+
+// ignore: constant_identifier_names
 const String DATABASE_NAME = 'cube_timer.db';
+
+List<CubeTypeModel> initCubeTypes = [
+  CubeTypeModel(
+    id: 0,
+    type: CubeType.twoByTwo,
+  ),
+  CubeTypeModel(
+    id: 1,
+    type: CubeType.threeByThree,
+  ),
+  CubeTypeModel(
+    id: 2,
+    type: CubeType.fourByFour,
+  ),
+  CubeTypeModel(
+    id: 3,
+    type: CubeType.fiveByFive,
+  ),
+  CubeTypeModel(
+    id: 4,
+    type: CubeType.sixBySix,
+  ),
+  CubeTypeModel(
+    id: 5,
+    type: CubeType.sevenBySeven,
+  ),
+];
 
 enum CubeType {
   twoByTwo,

@@ -1,3 +1,4 @@
+import 'package:cube_timer_2/config/database/config_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -59,23 +60,13 @@ class DatabaseHelper {
     ''');
 
     await db.execute('''
-      INSERT INTO CubeType (type) VALUES
-        ('2x2'),
-        ('3x3'),
-        ('4x4'),
-        ('5x5'),
-        ('6x6'),
-        ('7x7')
-    ''');
+      INSERT INTO CubeType (id, type) VALUES
+        ${initCubeTypes.map((cubeType) => "('${cubeType.id}', '${cubeType.type.name}')").join(',')}
+      ''');
     
     await db.execute('''
       INSERT INTO Category (name, cubeTypeId) VALUES
-        ('Normal', 1),
-        ('Normal', 2),
-        ('Normal', 3),
-        ('Normal', 4),
-        ('Normal', 5),
-        ('Normal', 6)
+         ${initCubeTypes.map((cubeType) => "('Normal', '${cubeType.id}')").join(',')}
     ''');
   }
 }

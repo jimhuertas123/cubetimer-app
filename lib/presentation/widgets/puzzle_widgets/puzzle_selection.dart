@@ -26,7 +26,7 @@ class PuzzleSelection extends StatelessWidget {
         itemBuilder: (context, index) {
           return CustomButtonSplash(
             name: cubeTypes[index].type, 
-            index: index,
+            indexPuzzleCube: index,
             padding: const EdgeInsets.symmetric(horizontal: 0),
           );
         },

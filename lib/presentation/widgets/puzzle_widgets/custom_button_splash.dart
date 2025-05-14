@@ -1,8 +1,7 @@
 import 'package:cube_timer_2/config/config.dart';
 import 'package:cube_timer_2/config/database/config_database.dart';
 import 'package:cube_timer_2/database/models/cube_type_model.dart';
-import 'package:cube_timer_2/presentation/providers/cube_type_provider.dart';
-import 'package:cube_timer_2/presentation/providers/puzzle_options_provider.dart';
+import 'package:cube_timer_2/presentation/providers/cube_type_opts_provider.dart';
 import 'dart:io' show Platform;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,22 +15,25 @@ import 'package:go_router/go_router.dart';
 class CustomButtonSplash extends StatelessWidget {
   final EdgeInsetsGeometry padding;
   final CubeType name;
-  final int index;
+  final int indexPuzzleCube;
 
   const CustomButtonSplash(
-      {super.key, required this.index, required this.padding, required this.name});
+      {super.key,
+      required this.indexPuzzleCube,
+      required this.padding,
+      required this.name});
 
   @override
   Widget build(BuildContext context) {
-    if (!Platform.isIOS) {
+    if (Platform.isIOS) {
       return IOSButtonSplashRow(
         name: name.name,
-        index: index,
+        indexPuzzleCube: indexPuzzleCube,
       );
     } else {
       return AndroidButtonSplashRow(
         name: name.name,
-        index: index,
+        indexPuzzleCube: indexPuzzleCube,
         padding: padding,
       );
     }
@@ -42,12 +44,12 @@ class CustomButtonSplash extends StatelessWidget {
 /// didnt exist original animation, but agree making it like long press animation in ios
 /// splash oversize scaling the entire button.
 class IOSButtonSplashRow extends ConsumerStatefulWidget {
-  final int index;
+  final int indexPuzzleCube;
   final String name;
   const IOSButtonSplashRow({
     super.key,
     required this.name,
-    required this.index,
+    required this.indexPuzzleCube,
   });
 
   @override
@@ -104,13 +106,13 @@ class _IOSButtonSplashRowState extends ConsumerState<IOSButtonSplashRow>
     final actualPuzzleOption = ref.watch(cubeTypeProvider).actualCubeType.type;
 
     return Container(
-      padding: widget.index > 2 ? EdgeInsets.only(top: 15) : EdgeInsets.zero,
+      padding: widget.indexPuzzleCube > 2 ? EdgeInsets.only(top: 15) : EdgeInsets.zero,
       child: GestureDetector(
         onTap: () {
-          CubeType optionWanted = CubeType.values[widget.index];
+          CubeType optionWanted = CubeType.values[widget.indexPuzzleCube];
           if (optionWanted != actualPuzzleOption) {
             CubeTypeModel cubeTypeModel =
-                CubeTypeModel(id: widget.index, type: optionWanted);
+                CubeTypeModel(id: widget.indexPuzzleCube, type: optionWanted);
             ref
                 .read(cubeTypeProvider.notifier)
                 .setCurrentCubeType(cubeTypeModel);
@@ -118,16 +120,18 @@ class _IOSButtonSplashRowState extends ConsumerState<IOSButtonSplashRow>
           }
         },
         onLongPressStart: (_) {
-          _startAnimation(widget.index);
+          _startAnimation(widget.indexPuzzleCube);
         },
         onLongPressEnd: (_) {
           isActive = false;
           _stopAnimation();
-          CubeType optionWanted = CubeType.values[widget.index];
+          CubeType optionWanted = CubeType.values[widget.indexPuzzleCube];
           if (optionWanted != actualPuzzleOption) {
+            CubeTypeModel cubeTypeModel =
+                CubeTypeModel(id: widget.indexPuzzleCube, type: optionWanted);
             ref
-                .read(puzzleOptionsProvider.notifier)
-                .setPuzzleOption(widget.index);
+                .read(cubeTypeProvider.notifier)
+                .setCurrentCubeType(cubeTypeModel);
           }
           context.pop();
         },
@@ -157,11 +161,11 @@ class _IOSButtonSplashRowState extends ConsumerState<IOSButtonSplashRow>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      iconList[widget.index],
+                      iconList[widget.indexPuzzleCube],
                       const SizedBox(height: 5),
                       Text(
                         '${widget.name} Cube',
-                        style: const TextStyle(fontSize: 12),
+                        style: const TextStyle(fontSize: 12, color: Colors.black),
                       ),
                     ],
                   ),
@@ -179,12 +183,12 @@ class _IOSButtonSplashRowState extends ConsumerState<IOSButtonSplashRow>
 /// splash oversize container size like original twisty timer app.
 class AndroidButtonSplashRow extends ConsumerStatefulWidget {
   final EdgeInsetsGeometry padding;
-  final int index;
-  final String name;  
+  final int indexPuzzleCube;
+  final String name;
   const AndroidButtonSplashRow({
     super.key,
     required this.name,
-    required this.index,
+    required this.indexPuzzleCube,
     required this.padding,
   });
 
@@ -270,21 +274,26 @@ class _AndroidButtonSplashRowState extends ConsumerState<AndroidButtonSplashRow>
 
   @override
   Widget build(BuildContext context) {
-    final actualPuzzleOption = ref.watch(puzzleOptionsProvider).puzzleOption;
+    final actualPuzzleOption = ref.watch(cubeTypeProvider).actualCubeType;
+    final listPuzzleCubes =
+        ref.watch(cubeTypeProvider).cubeTypes;
 
     return Container(
       key: key,
       margin: widget.padding,
       child: GestureDetector(
         onTap: () async {
-          CubeType optionWanted = CubeType.values[widget.index];
-          if (optionWanted != actualPuzzleOption) {
+          if (widget.indexPuzzleCube != actualPuzzleOption.id) {
             await _removeOverlay();
+            CubeTypeModel cubeTypeModel =
+                CubeTypeModel(id: widget.indexPuzzleCube, type: listPuzzleCubes[widget.indexPuzzleCube].type);
             ref
-                .read(puzzleOptionsProvider.notifier)
-                .setPuzzleOption(widget.index);
+                .read(cubeTypeProvider.notifier)
+                .setCurrentCubeType(cubeTypeModel);
           }
-          if (mounted) context.pop();
+          if (mounted) {
+            context.pop();
+          }
         },
         onLongPressStart: (details) async {
           if (!_isTouchDisabled) {
@@ -300,23 +309,23 @@ class _AndroidButtonSplashRowState extends ConsumerState<AndroidButtonSplashRow>
         },
         onLongPressEnd: (details) async {
           _removeOverlay();
-          CubeType optionWanted = CubeType.values[widget.index];
-          if (optionWanted != actualPuzzleOption) {
+          CubeType optionWanted = CubeType.values[widget.indexPuzzleCube];
+          if (optionWanted != actualPuzzleOption.type) {
             await _removeOverlay();
             if (mounted) {
+              CubeTypeModel cubeTypeModel =
+                  CubeTypeModel(id: widget.indexPuzzleCube, type: optionWanted);
               ref
-                  .read(puzzleOptionsProvider.notifier)
-                  .setPuzzleOption(widget.index);
+                  .read(cubeTypeProvider.notifier)
+                  .setCurrentCubeType(cubeTypeModel);
               context.pop();
             }
           }
         },
         child: Container(
-          //container for every children
           width: (MediaQuery.of(context).size.width < 500)
               ? (MediaQuery.of(context).size.width) / 3.5
               : 133,
-          // height: (MediaQuery.of(context).size.width) / 8,
           height: 50,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -324,7 +333,7 @@ class _AndroidButtonSplashRowState extends ConsumerState<AndroidButtonSplashRow>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              iconList[widget.index],
+              iconList[widget.indexPuzzleCube],
               SizedBox(height: 5),
               Text(
                 '${widget.name} Cube',

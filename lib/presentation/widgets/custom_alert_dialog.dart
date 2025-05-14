@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CustomAlertDialog extends StatelessWidget {
+class CustomAlertDialog extends StatefulWidget {
   final String tittle;
   final List<Widget>? actions;
   final BuildContext context;
@@ -26,37 +26,46 @@ class CustomAlertDialog extends StatelessWidget {
       this.tittleContent = const SizedBox.shrink()});
 
   @override
+  State<CustomAlertDialog> createState() => _CustomAlertDialogState();
+}
+
+class _CustomAlertDialogState extends State<CustomAlertDialog> {
+  @override
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
-      insetPadding: insetPadding,
+      insetPadding: widget.insetPadding,
       contentPadding: const EdgeInsets.only(top: 5.0, bottom: 0),
       titlePadding: const EdgeInsets.only(top: 10),
-      title: tittle.isEmpty
-          ? tittleContent
+      title: widget.tittle.isEmpty
+          ? widget.tittleContent
           : Text(
-              tittle,
+              widget.tittle,
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontWeight: FontWeight.w500,
-                  fontSize: fontTittleSize,
+                  fontSize: widget.fontTittleSize,
                   color: Colors.black),
             ),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(20.0)),
       ),
       actionsPadding: EdgeInsets.zero,
-      actions: actions,
+      actions: widget.actions,
       content: Builder(builder: (context) {
         return Container(
-          padding: contentPadding,
-          height: enableHeight ? (MediaQuery.of(context).size.height > 500 ? height ?? 472 : 290) : null,
+          padding: widget.contentPadding,
+          height: widget.enableHeight 
+            ? (MediaQuery.of(context).size.height > 500 
+              ? widget.height ?? 472 
+              : 290) 
+            : null,
           width: (MediaQuery.of(context).size.width < 400)
               ? MediaQuery.of(context).size.width - 50
               : 400,
           child: SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
-            child: ListBody(children: content),
+            child: ListBody(children: widget.content),
           ),
         );
       }),
