@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -39,7 +41,8 @@ class AppBarHome extends StatefulWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight + 10.0);
 }
 
-class _AppBarHomeState extends State<AppBarHome> with SingleTickerProviderStateMixin {
+class _AppBarHomeState extends State<AppBarHome>
+    with SingleTickerProviderStateMixin {
   bool isRotated = false;
   late AnimationController _animationController;
   late Animation<Offset> _slideAnimation;
@@ -48,13 +51,13 @@ class _AppBarHomeState extends State<AppBarHome> with SingleTickerProviderStateM
   @override
   void initState() {
     super.initState();
-    
+
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 400),
       reverseDuration: const Duration(milliseconds: 400),
       vsync: this,
     );
-    
+
     _slideAnimation = Tween<Offset>(
       begin: Offset.zero,
       end: const Offset(0, -1),
@@ -70,7 +73,6 @@ class _AppBarHomeState extends State<AppBarHome> with SingleTickerProviderStateM
       parent: _animationController,
       curve: Curves.easeInOutBack,
     ));
-
   }
 
   @override
@@ -140,12 +142,20 @@ class _AppBarHomeState extends State<AppBarHome> with SingleTickerProviderStateM
                           icon: AnimatedRotation(
                             turns: isRotated ? 5 / 6 : 0,
                             duration: const Duration(milliseconds: 200),
-                            child: Icon(
-                              color: widget.textColor,
-                              isRotated
-                                  ? Icons.hourglass_full_outlined
-                                  : Icons.hourglass_empty_outlined,
-                            ),
+                            child: Platform.isIOS
+                                ? Icon(
+                                    color: CupertinoColors.white,
+                                    isRotated
+                                        ? CupertinoIcons
+                                            .hourglass_bottomhalf_fill
+                                        : CupertinoIcons.hourglass,
+                                  )
+                                : Icon(
+                                    color: widget.textColor,
+                                    isRotated
+                                        ? Icons.hourglass_full_outlined
+                                        : Icons.hourglass_empty_outlined,
+                                  ),
                           ),
                           onPressed: () {
                             setState(() {
@@ -158,10 +168,12 @@ class _AppBarHomeState extends State<AppBarHome> with SingleTickerProviderStateM
                     alignment: Alignment.center,
                     width: 35.0,
                     child: IconButton(
-                      iconSize: 25.0,
-                      icon: Icon(Icons.category_outlined, color: widget.textColor),
-                      onPressed: widget.onPressedCategory //() async =>showAlertDialogNewCategory(context),),
-                    )),
+                        iconSize: 25.0,
+                        icon: Icon(Icons.category_outlined,
+                            color: widget.textColor),
+                        onPressed: widget
+                            .onPressedCategory //() async =>showAlertDialogNewCategory(context),),
+                        )),
                 const SizedBox(width: 15)
               ],
               shape: const RoundedRectangleBorder(
@@ -204,13 +216,13 @@ class _AppBarHomeState extends State<AppBarHome> with SingleTickerProviderStateM
             Center(
               child: Text(
                 widget.subtittle.length > 12
-                  ? '${widget.subtittle.substring(0, 12)}...'
-                  : widget.subtittle,
+                    ? '${widget.subtittle.substring(0, 12)}...'
+                    : widget.subtittle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                fontSize: 12.0,
-                color: textColor,
+                  fontSize: 12.0,
+                  color: textColor,
                 ),
               ),
             )

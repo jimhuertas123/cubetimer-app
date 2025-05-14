@@ -215,6 +215,7 @@ class AndroidHomeScreen extends ConsumerWidget {
               appColorTheme[actualThemeIndex].patternColor,
               selectedOption,
               actualThemeIndex,
+              actualTextColorIndex,
               ref,
               context),
           bottomNavigationBar: selectedOption == 0 ||
@@ -247,22 +248,25 @@ class AndroidHomeScreen extends ConsumerWidget {
   }
 
   Widget _getBodyContent(PageController pageController, ColorPair patternColor,
-      int currentOption, int actualThemeIndex, WidgetRef ref, context) {
+      int currentOption, int actualThemeIndex,int actualTextColorIndex, WidgetRef ref, context) {
     switch (currentOption) {
       case 0:
         return MainBody(
             optionBody: 0, //main body in constructor
+            actualTextColorIndex: actualTextColorIndex,
             patternColor: appColorTheme[actualThemeIndex].patternColor,
             pageController: pageController);
       case 2:
         return MainBody(
             optionBody: 1, //oll training body in constructor
+            actualTextColorIndex: actualTextColorIndex,
             patternColor: const ColorPair(
                 primaryColor: Colors.black, secondaryColor: Colors.white),
             pageController: pageController);
       case 3:
         return MainBody(
             optionBody: 2, //pll training body in constructor
+            actualTextColorIndex: actualTextColorIndex,
             patternColor: const ColorPair(
                 primaryColor: Colors.red, secondaryColor: Colors.green),
             pageController: pageController);

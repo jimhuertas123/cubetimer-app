@@ -21,7 +21,6 @@ final GlobalKey<ScaffoldState> scaffoldKeyIos = GlobalKey<ScaffoldState>();
 ///in contains the appBar, body and bottom navigation bar
 class IosHomeScreen extends ConsumerWidget {
   const IosHomeScreen({super.key});
-  // final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -59,6 +58,7 @@ class IosHomeScreen extends ConsumerWidget {
       bottom: true,
       top: false,
       child: Scaffold(
+          resizeToAvoidBottomInset: false,
           key: scaffoldKeyIos,
           extendBody: true,
           extendBodyBehindAppBar: true,
@@ -108,33 +108,23 @@ class IosHomeScreen extends ConsumerWidget {
             onPressedCategory: () => showDialog(
                 context: context,
                 builder: (context) {
-                  return CustomAlertDialog(
-                    enableHeight: false,
-                    insetPadding: EdgeInsets.symmetric(horizontal: 50),
-                    context: context,
-                    tittleContent: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            "Select a category",
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black),
-                          ),
-                          GestureDetector(
+                  return CustomCupertinoDialog(
+                    title: Column(
+                      children: [
+                        Text("Select a category"),
+                        const SizedBox(height: 5),
+                        GestureDetector(
                             onTap: () => showCustomModal(
                                 context,
                                 'Create new category',
                                 const IOSNewCategoryContent()),
                             child: Container(
+                              width: 90,
                               padding: EdgeInsets.symmetric(
                                   horizontal: 15, vertical: 8),
                               decoration: BoxDecoration(
                                 border: Border.all(
-                                  color: const Color(0xFF2962ff),
+                                  color: CupertinoColors.activeBlue,
                                   width: 1,
                                 ),
                                 borderRadius: BorderRadius.circular(20),
@@ -142,7 +132,7 @@ class IosHomeScreen extends ConsumerWidget {
                               child: Row(
                                 children: <Widget>[
                                   SvgPicture.asset(
-                                    'assets/icons/ic_add_category.svg',
+                                    'assets/icons/ic_add_category_ios.svg',
                                     width: 22,
                                     height: 22,
                                   ),
@@ -151,7 +141,7 @@ class IosHomeScreen extends ConsumerWidget {
                                     "New",
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: Color(0xFF2962ff),
+                                      color: const Color.fromRGBO(0, 122, 255, 1),
                                       fontWeight: FontWeight.w500,
                                     ),
                                   )
@@ -159,8 +149,7 @@ class IosHomeScreen extends ConsumerWidget {
                               ),
                             ),
                           )
-                        ],
-                      ),
+                      ],
                     ),
                     content: <Widget>[
                       Divider(),
@@ -180,6 +169,7 @@ class IosHomeScreen extends ConsumerWidget {
                           data: (categories) {
                              categories.sort((a, b) => a.name.compareTo(b.name));
                             return CategorySelection(
+                              selectedCategoryId: actualCategory.id!,
                               categories: categories,
                             );
                           },
@@ -197,6 +187,96 @@ class IosHomeScreen extends ConsumerWidget {
                       SizedBox(height: 5),
                     ],
                   );
+
+                  // CustomAlertDialog(
+                  //   enableHeight: false,
+                  //   insetPadding: EdgeInsets.symmetric(horizontal: 50),
+                  //   context: context,
+                  //   tittleContent: Padding(
+                  //     padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  //     child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //       children: <Widget>[
+                  //         Text(
+                  //           "Select a category",
+                  //           style: TextStyle(
+                  //               fontSize: 16,
+                  //               fontWeight: FontWeight.w500,
+                  //               color: Colors.black),
+                  //         ),
+                  //         GestureDetector(
+                  //           onTap: () => showCustomModal(
+                  //               context,
+                  //               'Create new category',
+                  //               const IOSNewCategoryContent()),
+                  //           child: Container(
+                  //             padding: EdgeInsets.symmetric(
+                  //                 horizontal: 15, vertical: 8),
+                  //             decoration: BoxDecoration(
+                  //               border: Border.all(
+                  //                 color: const Color(0xFF2962ff),
+                  //                 width: 1,
+                  //               ),
+                  //               borderRadius: BorderRadius.circular(20),
+                  //             ),
+                  //             child: Row(
+                  //               children: <Widget>[
+                  //                 SvgPicture.asset(
+                  //                   'assets/icons/ic_add_category.svg',
+                  //                   width: 22,
+                  //                   height: 22,
+                  //                 ),
+                  //                 SizedBox(width: 7),
+                  //                 Text(
+                  //                   "New",
+                  //                   style: TextStyle(
+                  //                     fontSize: 12,
+                  //                     color: Color(0xFF2962ff),
+                  //                     fontWeight: FontWeight.w500,
+                  //                   ),
+                  //                 )
+                  //               ],
+                  //             ),
+                  //           ),
+                  //         )
+                  //       ],
+                  //     ),
+                  //   ),
+                  //   content: <Widget>[
+                  //     Divider(),
+                  //     Consumer(builder: (context, ref, child) {
+                  //       final categoryState = ref.watch(categoryFutureProvider);
+                  //       return categoryState.when(
+                  //         loading: () => const Center(
+                  //           child: CupertinoActivityIndicator(
+                  //           color: CupertinoColors.activeBlue),
+                  //         ),
+                  //         error: (err, stack) => Center(
+                  //           child: Text(
+                  //             'Error loading categories',
+                  //             style: const TextStyle(color: Colors.red),
+                  //           ),
+                  //         ),
+                  //         data: (categories) {
+                  //            categories.sort((a, b) => a.name.compareTo(b.name));
+                  //           return CategorySelection(
+                  //             categories: categories,
+                  //           );
+                  //         },
+                  //       );
+                  //     }),
+                  //     Divider(),
+                  //     Center(
+                  //         child: Text(
+                  //       'Long-press an entry to edit',
+                  //       style: TextStyle(
+                  //         fontSize: 12,
+                  //         color: Colors.black,
+                  //       ),
+                  //     )),
+                  //     SizedBox(height: 5),
+                  //   ],
+                  // );
                 }),
           ),
           body: _getBodyContent(
@@ -204,6 +284,7 @@ class IosHomeScreen extends ConsumerWidget {
               appColorTheme[actualThemeIndex].patternColor,
               selectedOption,
               actualThemeIndex,
+              actualTextColorIndex,
               ref,
               context),
           bottomNavigationBar: selectedOption == 0 ||
@@ -236,22 +317,25 @@ class IosHomeScreen extends ConsumerWidget {
   }
 
   Widget _getBodyContent(PageController pageController, ColorPair patternColor,
-      int currentOption, int actualThemeIndex, WidgetRef ref, context) {
+      int currentOption, int actualThemeIndex, int actualTextColorIndex, WidgetRef ref, context) {
     switch (currentOption) {
       case 0:
         return MainBody(
             optionBody: 0, //main body in constructor
+            actualTextColorIndex: actualTextColorIndex,
             patternColor: appColorTheme[actualThemeIndex].patternColor,
             pageController: pageController);
       case 2:
         return MainBody(
             optionBody: 1, //oll training body in constructor
+            actualTextColorIndex: actualTextColorIndex,
             patternColor: const ColorPair(
                 primaryColor: Colors.black, secondaryColor: Colors.white),
             pageController: pageController);
       case 3:
         return MainBody(
             optionBody: 2, //pll training body in constructor
+            actualTextColorIndex: actualTextColorIndex,
             patternColor: const ColorPair(
                 primaryColor: Colors.red, secondaryColor: Colors.green),
             pageController: pageController);

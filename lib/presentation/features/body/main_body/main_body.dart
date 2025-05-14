@@ -5,17 +5,19 @@ import 'package:cube_timer_2/presentation/widgets/body_widgets/listview_containe
 import 'package:flutter/material.dart';
 
 class MainBody extends StatefulWidget {
-   // 0 for main body, 1 for oll training body, 2 for pll training body
+  // 0 for main body, 1 for oll training body, 2 for pll training body
   final int optionBody;
+  final int actualTextColorIndex;
 
   final PageController pageController;
   final ColorPair patternColor;
-  const MainBody({
-    super.key,
-    required this.patternColor,
-    required this.pageController,
-    required this.optionBody
-  })  : assert(optionBody >= 0 && optionBody <= 2);
+  const MainBody(
+      {super.key,
+      required this.patternColor,
+      required this.pageController,
+      required this.optionBody, 
+      required this.actualTextColorIndex})
+      : assert(optionBody >= 0 && optionBody <= 2);
 
   @override
   State<MainBody> createState() => _MainBodyState();
@@ -73,9 +75,11 @@ class _MainBodyState extends State<MainBody>
           ),
           child: PageViewContainers(
             key: const Key('main_body'),
-            pages: const [
+            pages: [
               CubeContainer(),
-              TimesContainer(),
+              TimesContainer(
+                actualTextColorIndex: widget.actualTextColorIndex,
+              ),
               StadiscticsContainer()
             ],
             pageController: widget.pageController,
