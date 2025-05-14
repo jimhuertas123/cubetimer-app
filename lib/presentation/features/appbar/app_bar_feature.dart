@@ -113,7 +113,7 @@ class _AppBarHomeState extends State<AppBarHome> with SingleTickerProviderStateM
               titleSpacing: 0,
               centerTitle: true,
               title: SizedBox(
-                width: 170,
+                width: 190,
                 child: ElevatedButton(
                   style: ButtonStyle(
                     surfaceTintColor:
@@ -201,8 +201,19 @@ class _AppBarHomeState extends State<AppBarHome> with SingleTickerProviderStateM
                     fontWeight: FontWeight.w500,
                     fontSize: 18.0,
                     color: textColor)),
-            Text(widget.subtittle,
-                style: TextStyle(fontSize: 12.0, color: textColor))
+            Center(
+              child: Text(
+                widget.subtittle.length > 12
+                  ? '${widget.subtittle.substring(0, 12)}...'
+                  : widget.subtittle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                fontSize: 12.0,
+                color: textColor,
+                ),
+              ),
+            )
           ],
         ),
         const SizedBox(width: 5),

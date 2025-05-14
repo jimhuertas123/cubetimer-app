@@ -127,6 +127,7 @@ class _AndroidNewCategoryAlertDialogState
               cubeTypeId: currentCubeType.id,
             );
             await dbHelper.insertCategory(newCategory);
+
             ref.refresh(categoryFutureProvider);
 
             Navigator.of(context).pop();

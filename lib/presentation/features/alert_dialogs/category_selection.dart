@@ -37,8 +37,11 @@ class CategorySelection extends ConsumerWidget {
             const Icon(Icons.label_outlined, size: 25, color: Colors.black38,),
             const SizedBox(width: 20),
             Text(
+              overflow: TextOverflow.ellipsis,
               categories.isNotEmpty
-                  ? category.name
+                  ? category.name.length > 22
+                    ? '${category.name.substring(0, 22)}...'
+                    : category.name
                   : 'No categories available (This must be a error loading categories)',
               style: const TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w400),
             ),
