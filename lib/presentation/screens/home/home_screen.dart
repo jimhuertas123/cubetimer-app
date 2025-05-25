@@ -10,7 +10,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!Platform.isIOS) {
+    if (Platform.isIOS) {
       return const IosHomeScreen();
     } else if (Platform.isAndroid) {
       return const AndroidHomeScreen();

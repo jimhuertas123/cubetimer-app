@@ -1,6 +1,7 @@
 export 'alert_dialogs/category_selection.dart';
 export 'alert_dialogs/new_category_dialog.dart';
 export 'alert_dialogs/time_recorded_dialog.dart';
+export 'alert_dialogs/custom_cupertino_dialog.dart';
 
 export 'appbar/app_bar_feature.dart';
 export 'body/algorithms_body/oll_algorithms_body.dart';

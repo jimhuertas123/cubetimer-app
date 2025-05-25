@@ -19,7 +19,7 @@ class CubeContainer extends StatelessWidget {
               child: Column(
                 children: [
                   CronometerCube(
-                    fontSize: containerHeight > 400 ? containerHeight*0.18 : containerHeight*0.5, 
+                    fontSize: containerHeight > 400 ? containerHeight*0.12 : containerHeight*0.4, 
                     containerHeight: containerHeight,
                     containerWidth: containerWidth,
                   ),

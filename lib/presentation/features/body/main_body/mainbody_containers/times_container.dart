@@ -1,12 +1,16 @@
 import 'package:cube_timer_2/config/test-data/times_recorded.dart';
+import 'package:cube_timer_2/config/theme/app_theme.dart';
 import 'package:cube_timer_2/presentation/features/features.dart';
 import 'package:cube_timer_2/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
 class TimesContainer extends ConsumerStatefulWidget {
-  const TimesContainer({super.key});
+  final int actualTextColorIndex;
+  const TimesContainer({
+    super.key,
+    required this.actualTextColorIndex,  
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _TimesContainerState();
@@ -35,178 +39,219 @@ class _TimesContainerState extends ConsumerState<TimesContainer> {
                 }),
               ),
         Expanded(
-          child: StretchingOverscrollIndicator(
-            axisDirection: AxisDirection.down,
-            child: GridView.builder(
-              physics: const BouncingScrollPhysics(
-                decelerationRate: ScrollDecelerationRate.normal,
-              ),
-              padding: const EdgeInsets.only(top: 10),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                mainAxisExtent: 66,
-                crossAxisCount: oritation == Orientation.portrait ? 3 : 6,
-                childAspectRatio: 3 / 1,
-              ),
-              itemCount: timesRecorded.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onLongPress: () {
-                    if (selectedIndices.contains(index)) {
-                      setState(() {
-                        selectedIndices.remove(index);
-                      });
-                    } else {
-                      setState(() {
-                        selectedIndices.add(index);
-                      });
-                    }
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.all(5.0),
-                    decoration: BoxDecoration(
-                      color: isBlackThemeColor
-                          ? selectedIndices.contains(index)
-                              ? Color(0xff4F4F4F)
-                              : Color(0xff1F1F1F)
-                          : selectedIndices.contains(index)
-                              ? Color(0xffEFEFEF)
-                              : Color(0xFFFFFEFF),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: selectedIndices.contains(index)
-                            ? Colors.black
-                            : Colors.transparent,
-                        width: 2,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withAlpha(30),
-                          spreadRadius: 0.3,
-                          blurRadius: 2.5,
-                          offset: const Offset(0, 0),
-                        ),
-                      ],
+          child: timesRecorded.isNotEmpty
+              ? _emptyTimesRecorded()
+              : StretchingOverscrollIndicator(
+                  axisDirection: AxisDirection.down,
+                  child: GridView.builder(
+                    physics: const BouncingScrollPhysics(
+                      decelerationRate: ScrollDecelerationRate.normal,
                     ),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.all(0),
-                        shape: const BeveledRectangleBorder(),
-                        backgroundColor: Colors.transparent,
-                        shadowColor: Colors.transparent,
-                      ),
-                      onPressed: () {
-                        selectedIndices.isEmpty
-                            ? showDialog(
-                                context: context,
-                                builder: (context) => ShowTimerRecordedDialog(
-                                  context: context,
-                                  comments: timesRecorded[index].comment,
-                                  recordedDate: timesRecorded[index].recordedDate,
-                                  recordedTime: timesRecorded[index].recordedTime,
-                                  solveTime: timesRecorded[index].solveTime,
-                                  scramble: timesRecorded[index].scramble,
-                                  penalty: timesRecorded[index].penalty,
-                                ))
-                            // ) showTimeRecordedDialog(context, index)
-                            : (selectedIndices.contains(index))
-                                ? setState(() {
-                                    selectedIndices.remove(index);
-                                  })
-                                : setState(() {
-                                    selectedIndices.add(index);
-                                  });
-                      },
-                      child: Column(children: [
-                        SizedBox(height: 5),
-                        Row(
-                          children: <Widget>[
-                            SizedBox(width: 8),
-                            //date of the timer
-                            Text(
-                              // "${index + 1}${index + 1}/${index + 1}${index + 1}",
-                              timesRecorded[index].recordedDate.date,
-                              style: TextStyle(
-                                fontSize: 11,
-                                height: 1,
-                                color: isBlackThemeColor
-                                    ? Color(0XFFFFFFEF)
-                                    : Colors.black,
-                              ),
-                            ),
-                            Expanded(child: Container()),
-                            //
-                            Text(
-                              // "+${index + 1}",
-                              timesRecorded[index].penalty == Penalty.plusTwo
-                                  ? "+2"
-                                  : "",
-                              style: TextStyle(
-                                color: Colors.red,
-                                fontSize: 11,
-                                fontWeight: FontWeight.bold,
-                                height: 1,
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            //time recorded
-                            Text(
-                              timesRecorded[index].penalty == Penalty.dnf
-                              ? "DNF"
-                              : timesRecorded[index].solveTime.minutes != "0"
-                                  ? "${timesRecorded[index].solveTime.minutes}:${timesRecorded[index].solveTime.seconds}"
-                                  : timesRecorded[index].solveTime.seconds,
-                              style: TextStyle(
-                                color: !isBlackThemeColor
-                                    ? Colors.black
-                                    : Colors.white70,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              timesRecorded[index].penalty == Penalty.dnf 
-                               ? ""
-                               : ".${timesRecorded[index].solveTime.milliseconds}",
-                              style: TextStyle(
-                                  color: !isBlackThemeColor
-                                      ? Colors.black
-                                      : Colors.white70,
-                                  fontSize: 13.0,
-                                  fontWeight: FontWeight.bold,
-                                  height: 1.7),
-                            )
-                          ],
-                        ),
-                        Visibility(
-                          visible: timesRecorded[index].comment != "",
-                          child: Container(
-                              margin: const EdgeInsets.only(left: 8),
-                              alignment: Alignment.centerLeft,
-                              child: Icon(
-                                Icons.comment_outlined,
-                                size: 13,
-                                color: !isBlackThemeColor
-                                    ? Colors.black
-                                    : Colors.white70,
-                              )),
-                        )
-                      ]),
+                    padding: const EdgeInsets.only(top: 10),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      mainAxisExtent: 66,
+                      crossAxisCount: oritation == Orientation.portrait ? 3 : 6,
+                      childAspectRatio: 3 / 1,
                     ),
+                    itemCount: timesRecorded.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onLongPress: () {
+                          if (selectedIndices.contains(index)) {
+                            setState(() {
+                              selectedIndices.remove(index);
+                            });
+                          } else {
+                            setState(() {
+                              selectedIndices.add(index);
+                            });
+                          }
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.all(5.0),
+                          decoration: BoxDecoration(
+                            color: isBlackThemeColor
+                                ? selectedIndices.contains(index)
+                                    ? Color(0xff4F4F4F)
+                                    : Color(0xff1F1F1F)
+                                : selectedIndices.contains(index)
+                                    ? Color(0xffEFEFEF)
+                                    : Color(0xFFFFFEFF),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: selectedIndices.contains(index)
+                                  ? Colors.black
+                                  : Colors.transparent,
+                              width: 2,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withAlpha(30),
+                                spreadRadius: 0.3,
+                                blurRadius: 2.5,
+                                offset: const Offset(0, 0),
+                              ),
+                            ],
+                          ),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.all(0),
+                              shape: const BeveledRectangleBorder(),
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
+                            ),
+                            onPressed: () {
+                              selectedIndices.isEmpty
+                                  ? showDialog(
+                                      context: context,
+                                      builder: (context) =>
+                                          ShowTimerRecordedDialog(
+                                            context: context,
+                                            comments:
+                                                timesRecorded[index].comment,
+                                            recordedDate: timesRecorded[index]
+                                                .recordedDate,
+                                            recordedTime: timesRecorded[index]
+                                                .recordedTime,
+                                            solveTime:
+                                                timesRecorded[index].solveTime,
+                                            scramble:
+                                                timesRecorded[index].scramble,
+                                            penalty:
+                                                timesRecorded[index].penalty,
+                                          ))
+                                  // ) showTimeRecordedDialog(context, index)
+                                  : (selectedIndices.contains(index))
+                                      ? setState(() {
+                                          selectedIndices.remove(index);
+                                        })
+                                      : setState(() {
+                                          selectedIndices.add(index);
+                                        });
+                            },
+                            child: Column(children: [
+                              SizedBox(height: 5),
+                              Row(
+                                children: <Widget>[
+                                  SizedBox(width: 8),
+                                  //date of the timer
+                                  Text(
+                                    // "${index + 1}${index + 1}/${index + 1}${index + 1}",
+                                    timesRecorded[index].recordedDate.date,
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      height: 1,
+                                      color: isBlackThemeColor
+                                          ? Color(0XFFFFFFEF)
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                  Expanded(child: Container()),
+                                  //
+                                  Text(
+                                    // "+${index + 1}",
+                                    timesRecorded[index].penalty ==
+                                            Penalty.plusTwo
+                                        ? "+2"
+                                        : "",
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold,
+                                      height: 1,
+                                    ),
+                                  ),
+                                  SizedBox(width: 8),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  //time recorded
+                                  Text(
+                                    timesRecorded[index].penalty == Penalty.dnf
+                                        ? "DNF"
+                                        : timesRecorded[index]
+                                                    .solveTime
+                                                    .minutes !=
+                                                "0"
+                                            ? "${timesRecorded[index].solveTime.minutes}:${timesRecorded[index].solveTime.seconds}"
+                                            : timesRecorded[index]
+                                                .solveTime
+                                                .seconds,
+                                    style: TextStyle(
+                                      color: !isBlackThemeColor
+                                          ? Colors.black
+                                          : Colors.white70,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    timesRecorded[index].penalty == Penalty.dnf
+                                        ? ""
+                                        : ".${timesRecorded[index].solveTime.milliseconds}",
+                                    style: TextStyle(
+                                        color: !isBlackThemeColor
+                                            ? Colors.black
+                                            : Colors.white70,
+                                        fontSize: 13.0,
+                                        fontWeight: FontWeight.bold,
+                                        height: 1.7),
+                                  )
+                                ],
+                              ),
+                              Visibility(
+                                visible: timesRecorded[index].comment != "",
+                                child: Container(
+                                    margin: const EdgeInsets.only(left: 8),
+                                    alignment: Alignment.centerLeft,
+                                    child: Icon(
+                                      Icons.comment_outlined,
+                                      size: 13,
+                                      color: !isBlackThemeColor
+                                          ? Colors.black
+                                          : Colors.white70,
+                                    )),
+                              )
+                            ]),
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
-          ),
+                ),
         ),
       ]),
     );
   }
+
+  Column _emptyTimesRecorded() => Column(
+    mainAxisAlignment: MainAxisAlignment.spaceAround,
+    children: [
+      SizedBox(height: 1),
+      Image(
+        height: MediaQuery.of(context).size.height < 400
+            ? 80
+            : MediaQuery.of(context).size.height * 0.3, 
+        image: AssetImage("assets/icons/warn_empty_list.png")),
+      Container(
+        padding: EdgeInsets.only(right: 30),
+        child: Text(
+          '''
+          Nothing here yet!
+          Tap the switch at the top of the screen to see your history.
+          ''',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 16,
+            color: appTextTheme[widget.actualTextColorIndex].colorText,
+          ),
+        ),
+      )
+    ],
+  );
 
   Container _searchTimesBar(bool isBlackThemeColor) => Container(
         margin: const EdgeInsets.only(top: 10.0, left: 8.0, right: 8.0),
@@ -302,7 +347,6 @@ class _TimesContainerState extends ConsumerState<TimesContainer> {
         ),
       );
 }
-
 
 class DeleteTimesNavigation extends StatefulWidget {
   final bool isBlackThemeColor;

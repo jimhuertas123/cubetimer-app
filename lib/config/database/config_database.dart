@@ -39,6 +39,24 @@ enum CubeType {
   sixBySix,
   sevenBySeven,
 }
+extension CubeTypeExtensionNCube on CubeType {
+  int get n {
+    switch (this) {
+      case CubeType.twoByTwo:
+        return 2;
+      case CubeType.threeByThree:
+        return 3;
+      case CubeType.fourByFour:
+        return 4;
+      case CubeType.fiveByFive:
+        return 5;
+      case CubeType.sixBySix:
+        return 6;
+      case CubeType.sevenBySeven:
+        return 7;
+    }
+  }
+}
 
 extension CubeTypeExtension on CubeType {
   String get name {

@@ -106,11 +106,15 @@ class _IOSButtonSplashRowState extends ConsumerState<IOSButtonSplashRow>
     final actualPuzzleOption = ref.watch(cubeTypeProvider).actualCubeType.type;
 
     return Container(
-      padding: widget.indexPuzzleCube > 2 ? EdgeInsets.only(top: 15) : EdgeInsets.zero,
+      padding: widget.indexPuzzleCube > 2
+          ? EdgeInsets.only(top: 15)
+          : EdgeInsets.zero,
       child: GestureDetector(
         onTap: () {
           CubeType optionWanted = CubeType.values[widget.indexPuzzleCube];
           if (optionWanted != actualPuzzleOption) {
+            debugPrint("New: $optionWanted");
+            debugPrint("Old $actualPuzzleOption");
             CubeTypeModel cubeTypeModel =
                 CubeTypeModel(id: widget.indexPuzzleCube, type: optionWanted);
             ref
@@ -165,7 +169,8 @@ class _IOSButtonSplashRowState extends ConsumerState<IOSButtonSplashRow>
                       const SizedBox(height: 5),
                       Text(
                         '${widget.name} Cube',
-                        style: const TextStyle(fontSize: 12, color: Colors.black),
+                        style:
+                            const TextStyle(fontSize: 12, color: Colors.black),
                       ),
                     ],
                   ),
@@ -275,8 +280,7 @@ class _AndroidButtonSplashRowState extends ConsumerState<AndroidButtonSplashRow>
   @override
   Widget build(BuildContext context) {
     final actualPuzzleOption = ref.watch(cubeTypeProvider).actualCubeType;
-    final listPuzzleCubes =
-        ref.watch(cubeTypeProvider).cubeTypes;
+    final listPuzzleCubes = ref.watch(cubeTypeProvider).cubeTypes;
 
     return Container(
       key: key,
@@ -285,8 +289,9 @@ class _AndroidButtonSplashRowState extends ConsumerState<AndroidButtonSplashRow>
         onTap: () async {
           if (widget.indexPuzzleCube != actualPuzzleOption.id) {
             await _removeOverlay();
-            CubeTypeModel cubeTypeModel =
-                CubeTypeModel(id: widget.indexPuzzleCube, type: listPuzzleCubes[widget.indexPuzzleCube].type);
+            CubeTypeModel cubeTypeModel = CubeTypeModel(
+                id: widget.indexPuzzleCube,
+                type: listPuzzleCubes[widget.indexPuzzleCube].type);
             ref
                 .read(cubeTypeProvider.notifier)
                 .setCurrentCubeType(cubeTypeModel);
