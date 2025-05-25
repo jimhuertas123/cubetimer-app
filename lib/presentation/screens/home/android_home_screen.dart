@@ -112,6 +112,7 @@ class AndroidHomeScreen extends ConsumerWidget {
                       ],
                     )),
             onPressedCategory: () => showDialog(
+                barrierDismissible: true,
                 context: context,
                 builder: (context) {
                   // final List<CategoryModel> actualCategories =

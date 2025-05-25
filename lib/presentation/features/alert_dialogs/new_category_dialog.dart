@@ -60,31 +60,39 @@ class _AndroidNewCategoryAlertDialogState
       contentPadding:
           const EdgeInsets.only(right: 0, left: 0, top: 0, bottom: 0),
       content: <Widget>[
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 25.0),
-          child: TextField(
-            controller: _textController,
-            cursorColor: Colors.green,
-            maxLines: 1,
-            decoration: InputDecoration(
-              hintText: 'Enter category name',
-              border: InputBorder.none,
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.red,
-                  width: 2.0,
+        SingleChildScrollView(
+          child: IntrinsicHeight(
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25.0),
+                  child: TextField(
+                    controller: _textController,
+                    cursorColor: Colors.green,
+                    maxLines: 1,
+                    decoration: InputDecoration(
+                      hintText: 'Enter category name',
+                      border: InputBorder.none,
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.red,
+                          width: 2.0,
+                        ),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.red,
+                          width: 2.0,
+                        ),
+                      ),
+                      labelStyle: TextStyle(
+                          fontSize: 16,
+                          fontFamily: "Arial",
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 ),
-              ),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.red,
-                  width: 2.0,
-                ),
-              ),
-              labelStyle: TextStyle(
-                  fontSize: 16,
-                  fontFamily: "Arial",
-                  fontWeight: FontWeight.bold),
+              ],
             ),
           ),
         ),
@@ -128,9 +136,12 @@ class _AndroidNewCategoryAlertDialogState
             );
             await dbHelper.insertCategory(newCategory);
 
+            // ignore: unused_result
             ref.refresh(categoryFutureProvider);
 
-            Navigator.of(context).pop();
+            if(mounted) {
+              Navigator.of(context).pop();
+            }
           },
           style: TextButton.styleFrom(
             backgroundColor: Colors.transparent,

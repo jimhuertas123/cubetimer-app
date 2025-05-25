@@ -82,8 +82,7 @@ class IosHomeScreen extends ConsumerWidget {
             onPressedTittle: () => showDialog(
                 context: context,
                 builder: (context) => CustomAlertDialog(
-                      enableHeight: true,
-                      height: 370,
+                      enableHeight: false,
                       tittleContent: Container(
                         padding: const EdgeInsets.only(top: 10, bottom: 0),
                         child: Center(

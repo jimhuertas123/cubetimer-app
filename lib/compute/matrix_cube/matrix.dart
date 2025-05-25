@@ -1,5 +1,6 @@
+// ignore_for_file: avoid_print
+
 import 'package:cube_timer_2/config/database/config_database.dart';
-import 'package:flutter/material.dart';
 
 int getNcubeType(CubeType type) {
   switch (type) {
@@ -47,8 +48,6 @@ class AdjacentInfo {
   });
 }
 
-
-
 ///For every CubeFace, define Adjacent faces for [rows,columns]
 final Map<Face, List<AdjacentInfo>> adjacentMap = {
   //0:U
@@ -61,34 +60,50 @@ final Map<Face, List<AdjacentInfo>> adjacentMap = {
 
   //1:L
   Face.L: [
-    AdjacentInfo(Face.U, (n, layer) => [null, layer], reverseClockwise: true), // U firsts column
+    AdjacentInfo(Face.U, (n, layer) => [null, layer],
+        reverseClockwise: true), // U firsts column
     AdjacentInfo(Face.F, (n, layer) => [null, layer]), // F firsts column
-    AdjacentInfo(Face.D, (n, layer) => [null, layer], reverseCounterClockwise: true), // D firsts column
-    AdjacentInfo(Face.B, (n, layer) => [null, n - 1 - layer], reverseClockwise: true, reverseCounterClockwise: true), // B lasts column
+    AdjacentInfo(Face.D, (n, layer) => [null, layer],
+        reverseCounterClockwise: true), // D firsts column
+    AdjacentInfo(Face.B, (n, layer) => [null, n - 1 - layer],
+        reverseClockwise: true,
+        reverseCounterClockwise: true), // B lasts column
   ],
 
   //2:F
   Face.F: [
-    AdjacentInfo(Face.U, (n, layer) => [n - 1 - layer, null], reverseClockwise: true), // U lasts row
-    AdjacentInfo(Face.R, (n, layer) => [null, layer], reverseCounterClockwise: true), // R firsts column
-    AdjacentInfo(Face.D, (n, layer) => [layer, null], reverseClockwise: true), // D firsts row
-    AdjacentInfo(Face.L, (n, layer) => [null, n - 1 - layer], reverseCounterClockwise: true), // L lasts column
+    AdjacentInfo(Face.U, (n, layer) => [n - 1 - layer, null],
+        reverseClockwise: true), // U lasts row
+    AdjacentInfo(Face.R, (n, layer) => [null, layer],
+        reverseCounterClockwise: true), // R firsts column
+    AdjacentInfo(Face.D, (n, layer) => [layer, null],
+        reverseClockwise: true), // D firsts row
+    AdjacentInfo(Face.L, (n, layer) => [null, n - 1 - layer],
+        reverseCounterClockwise: true), // L lasts column
   ],
 
   //3:R
   Face.R: [
-    AdjacentInfo(Face.U, (n, layer) => [null, n - 1 - layer], reverseCounterClockwise: true), // U lasts column
-    AdjacentInfo(Face.B, (n, layer) => [null, layer], reverseClockwise: true, reverseCounterClockwise: true), // B firsts column
-    AdjacentInfo(Face.D, (n, layer) => [null, n - 1 - layer], reverseClockwise: true), // D lasts column
+    AdjacentInfo(Face.U, (n, layer) => [null, n - 1 - layer],
+        reverseCounterClockwise: true), // U lasts column
+    AdjacentInfo(Face.B, (n, layer) => [null, layer],
+        reverseClockwise: true,
+        reverseCounterClockwise: true), // B firsts column
+    AdjacentInfo(Face.D, (n, layer) => [null, n - 1 - layer],
+        reverseClockwise: true), // D lasts column
     AdjacentInfo(Face.F, (n, layer) => [null, n - 1 - layer]), // F lasts column
   ],
 
   //4:B
   Face.B: [
-    AdjacentInfo(Face.U, (n, layer) => [layer, null], reverseCounterClockwise: true), // U firsts row
-    AdjacentInfo(Face.L, (n, layer) => [null, layer], reverseClockwise: true), // L firsts column
-    AdjacentInfo(Face.D, (n, layer) => [n - 1 - layer, null], reverseCounterClockwise: true), // D lasts row
-    AdjacentInfo(Face.R, (n, layer) => [null, n - 1 - layer], reverseClockwise: true), // R lasts column
+    AdjacentInfo(Face.U, (n, layer) => [layer, null],
+        reverseCounterClockwise: true), // U firsts row
+    AdjacentInfo(Face.L, (n, layer) => [null, layer],
+        reverseClockwise: true), // L firsts column
+    AdjacentInfo(Face.D, (n, layer) => [n - 1 - layer, null],
+        reverseCounterClockwise: true), // D lasts row
+    AdjacentInfo(Face.R, (n, layer) => [null, n - 1 - layer],
+        reverseClockwise: true), // R lasts column
   ],
 
   //5:D
@@ -99,9 +114,6 @@ final Map<Face, List<AdjacentInfo>> adjacentMap = {
     AdjacentInfo(Face.L, (n, layer) => [n - 1 - layer, null]), // L lasts row
   ],
 };
-
-
-
 
 /// The [Matrix] class represents a bidimensional matrix used to model a cube's faces,
 /// where each element in the matrix corresponds to a color represented by a number.
@@ -173,25 +185,24 @@ class Matrix {
   Matrix({
     required this.type,
   }) : nCubeType = getNcubeType(type) {
-    int cont = 0;
     _cube = List.generate(
       6, // 6 caras
       (face) => List.generate(
         nCubeType, // n filas por cara
         (_) => List.generate(
-              nCubeType, (_) => ++cont
-            ), // color inicial = número de cara
+            nCubeType, (_) => face// color inicial = número de cara
+            ),
       ),
     );
   }
 
   void printMatrix() {
     for (int i = 0; i < _cube.length; i++) {
-      debugPrint('Cara $i:');
+      print('Cara $i:');
       for (int j = 0; j < _cube[i].length; j++) {
-        debugPrint('${_cube[i][j]}');
+        print('${_cube[i][j]}');
       }
-      debugPrint('');
+      print('');
     }
   }
 
@@ -237,7 +248,8 @@ class Matrix {
       final idx = adj.getIndex(n, layer);
       List<int> strip = List<int>.from(rotatedStrips[i]);
       // Apply reverse according to the direction and flags
-      if ((clockWise && adj.reverseClockwise) || (!clockWise && adj.reverseCounterClockwise)) {
+      if ((clockWise && adj.reverseClockwise) ||
+          (!clockWise && adj.reverseCounterClockwise)) {
         strip = List<int>.from(strip.reversed);
       }
       if (idx[0] != null) {
@@ -267,14 +279,80 @@ class Matrix {
       }
     }
   }
+
+  void readScramble(String scramble) {
+    List<String> moves = scramble.split(' ');
+
+    if (moves.isEmpty) {
+      print('No moves to process.');
+      return;
+    } else if ((type.n == 2 || type.n == 3) && scramble.contains('w')) {
+      print('Wide moves are not allowed for 2x2 and 3x3 cubes.');
+      return;
+    }
+
+    for (String move in moves) {
+      //parse the move
+      //check if the first character is a digit (for wide moves like "3Rw")
+      int layerDepth = int.tryParse(move[0]) == null
+          ? move.contains('w') //check if the move is a wide move
+              ? 1 // depth = 1 in layer
+              : 0 // depth = 0 (only external layer)
+          : int.parse(move[0]); // depth > 1 in layer
+
+      if (type.n % 2 == 0 && layerDepth > type.n / 2) {
+        print('Invalid layer depth for this cube type.');
+        return;
+      } else if (type.n % 2 == 1 && layerDepth > (type.n - 1) / 2) {
+        print('Invalid layer depth for this cube type.');
+        return;
+      }
+
+      String face = layerDepth <= 1
+          ? move[0]
+          : move[1]; // face = first character of the move
+
+      // Determinate how many times to rotate and the direction
+      int times = 1;
+      bool clockwise = true;
+
+      // Buscar si el último carácter es ' (antihorario)
+      if (move.endsWith("'")) {
+        clockwise = false;
+        // Revisar si el penúltimo carácter es un número (solo puede ser '2')
+        if (move.length > 2 && move[move.length - 2] == '2') {
+          times = 2;
+        }
+      } else if (move.endsWith('2')) {
+        times = 2;
+      } else {
+        print('Invalid move format: $move');
+        return;
+      }
+
+      // print('\tface: \'$face\'');
+      // print('\tlayer: \'$layerDepth\'');
+      // print('\tclockwise: \'$clockwise\'');
+      // print('\ttimes: \'$times\'\n');
+
+      //rotations
+      for (int layer = 0; layer < layerDepth; layer++) {
+        for (int i = 0; i < times; i++) {
+          rotateLayerbyFace(
+              Face.values.firstWhere((e) => e.name == face), layer, clockwise);
+        }
+      }
+
+      // rotateLayerbyFace(Face.values.firstWhere((e) => e.name == face), layer, clockwise);
+    }
+  }
 }
 
-void main(List<String> args) {
-  const CubeType type = CubeType.threeByThree;
-  Matrix matrix = Matrix(type: type);
+// void main(List<String> args) {
+//   const CubeType type = CubeType.threeByThree;
+//   Matrix matrix = Matrix(type: type);
 
-  const int layer = 0;
-  matrix.rotateLayerbyFace(Face.D, layer, false);
-  matrix.printMatrix();
+//   matrix.readScramble("B' L'");
+//   matrix.printMatrix();
 
-}
+// }

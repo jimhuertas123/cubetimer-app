@@ -50,6 +50,7 @@ flutter:
   assets:
     - assets/icons/
     - assets/category/
+    - assets/drawer_templates/
 
   fonts:
     - family: Lato

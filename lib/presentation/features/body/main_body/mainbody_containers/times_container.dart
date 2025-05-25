@@ -39,7 +39,7 @@ class _TimesContainerState extends ConsumerState<TimesContainer> {
                 }),
               ),
         Expanded(
-          child: !timesRecorded.isEmpty
+          child: timesRecorded.isNotEmpty
               ? _emptyTimesRecorded()
               : StretchingOverscrollIndicator(
                   axisDirection: AxisDirection.down,

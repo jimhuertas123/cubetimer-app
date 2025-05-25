@@ -18,6 +18,7 @@ class CategorySelection extends ConsumerWidget {
     final bool isIOS = Platform.isIOS;
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: categories.map((category) => ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: isIOS ? CupertinoColors.extraLightBackgroundGray : Colors.transparent,
@@ -27,7 +28,7 @@ class CategorySelection extends ConsumerWidget {
           shape: RoundedRectangleBorder(
             borderRadius: isIOS ? BorderRadius.circular(10) : BorderRadius.circular(0),
             side: BorderSide(
-              color: Colors.transparent,
+              color: Colors.red,
               width: 0.1,
             ),
           ),
@@ -45,7 +46,7 @@ class CategorySelection extends ConsumerWidget {
               isIOS 
                 ? CupertinoIcons.tag
                 : Icons.label_outline,
-              size: isIOS ? 20 : 25,
+              size: isIOS ? 20 : 22,
               color: Colors.black38,
             ),
             const SizedBox(width: 20),
@@ -58,7 +59,7 @@ class CategorySelection extends ConsumerWidget {
                     : category.name
                   : 'No categories available (This must be a error loading categories)',
                 style: isIOS ? null : const TextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   color: Colors.black,
                   fontWeight: FontWeight.w400),
               ),

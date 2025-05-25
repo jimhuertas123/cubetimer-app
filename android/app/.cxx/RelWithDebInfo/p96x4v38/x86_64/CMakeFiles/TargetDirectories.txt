@@ -1,0 +1,2 @@
+/Users/jimhuertas/Documents/Apps/Flutter/cube_timer_2/android/app/.cxx/RelWithDebInfo/p96x4v38/x86_64/CMakeFiles/edit_cache.dir
+/Users/jimhuertas/Documents/Apps/Flutter/cube_timer_2/android/app/.cxx/RelWithDebInfo/p96x4v38/x86_64/CMakeFiles/rebuild_cache.dir

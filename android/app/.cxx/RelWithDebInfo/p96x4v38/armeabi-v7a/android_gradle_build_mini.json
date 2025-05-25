@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/Users/jimhuertas/development/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/jimhuertas/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/jimhuertas/Documents/Apps/Flutter/cube_timer_2/android/app/.cxx/RelWithDebInfo/p96x4v38/armeabi-v7a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/jimhuertas/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/jimhuertas/Documents/Apps/Flutter/cube_timer_2/android/app/.cxx/RelWithDebInfo/p96x4v38/armeabi-v7a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}

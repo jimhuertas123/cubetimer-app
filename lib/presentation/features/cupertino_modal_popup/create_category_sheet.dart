@@ -180,6 +180,8 @@ class _IOSNewCategoryContentState extends ConsumerState<IOSNewCategoryContent> {
                 cubeTypeId: currentCubeType.id,
               );
               await dbHelper.insertCategory(newCategory);
+              
+              // ignore: unused_result
               ref.refresh(categoryFutureProvider);
 
               if (mounted){
