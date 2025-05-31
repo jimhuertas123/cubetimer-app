@@ -49,20 +49,7 @@ class _MainBodyState extends State<MainBody>
   @override
   Widget build(BuildContext context) {
     debugPrint("mainbody build");
-    return NotificationListener<ScrollNotification>(
-      onNotification: (ScrollNotification notification) {
-        if (notification is OverscrollNotification && !isAtEdge) {
-          // Activa la animación de estiramiento solo si no está en el borde
-          isAtEdge = true;
-          _controller.forward(from: 0.0);
-        } else if (notification is ScrollEndNotification) {
-          // Cuando termina el desplazamiento, resetea el borde y la animación
-          isAtEdge = false;
-          _controller.reverse();
-        }
-        return true;
-      },
-      child: Container(
+    return Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
@@ -84,7 +71,7 @@ class _MainBodyState extends State<MainBody>
             ],
             pageController: widget.pageController,
             stretchAnimation: _stretchAnimation,
-          )),
+          )
     );
   }
 }

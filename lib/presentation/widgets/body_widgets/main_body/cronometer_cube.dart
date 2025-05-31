@@ -228,10 +228,11 @@ class _CronometerCubeState extends ConsumerState<CronometerCube>
     return Expanded(
       child: Stack(
         children: [
+          // text message for new average (only vertical orientation)
           if (_targetPosition != null && widget.containerHeight <= 400)
             Positioned(
               left: 0,
-              top: _targetPosition!.dy - 120,
+              top: _targetPosition?.dy != null ?  _targetPosition!.dy - 120 : widget.containerHeight * 0.5,
               child: Container(
                 padding: const EdgeInsets.symmetric(
                   // vertical: 1,
@@ -241,11 +242,16 @@ class _CronometerCubeState extends ConsumerState<CronometerCube>
                   !isRunning && brokedNewRecord
                       ? "Congratulations! \nYou've just beaten your \nprevious personal best by \n12.23"
                       : "",
-                  style: TextStyle(fontWeight: FontWeight.bold, color: colorTextTheme, fontSize: 14, height: 1.2),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: colorTextTheme,
+                      fontSize: 14,
+                      height: 1.2),
                 ),
-                
               ),
             ),
+
+          //cronometer main body
           SafeArea(
             child: GestureDetector(
               onTap: () => {
@@ -266,6 +272,7 @@ class _CronometerCubeState extends ConsumerState<CronometerCube>
                     EdgeInsets.only(top: widget.containerWidth > 400 ? 5 : 10),
                 color: Colors.transparent,
                 child: Stack(children: [
+                  //green circle
                   AnimatedBuilder(
                     animation: _circleScaleAnimation,
                     builder: (context, child) {
@@ -308,32 +315,41 @@ class _CronometerCubeState extends ConsumerState<CronometerCube>
                         ),
 
                         //CRONOMETER
-                        Expanded(
-                          child: Container(
-                            alignment: Alignment.center,
-                            // color: Colors.orange,
-                            child: CronometerTime(
-                                scaleAnimation: _scaleAnimation,
-                                buttonScaleAnimation: _buttonScaleAnimation,
-                                textColor: colorTextTheme,
-                                isTimerRunning: isRunning,
-                                breakNewRecord: brokedNewRecord,
-                                containerHeight: widget.containerHeight,
-                                timer: _timer,
-                                height: cronometerHeight,
-                                fontSize: widget.containerHeight > 400
-                                    ? widget.fontSize
-                                    : widget.fontSize * 0.6),
-                          ),
-                        ),
+                        // Expanded(
+                        //   child: Container(
+                        //     width: double.infinity,
+                        //     color: Colors.red,
+                        //     child: FittedBox(
+                        //       fit: BoxFit.fill,
+                        //       child: Container(
+                        //         width: 300,
+                        //         height: 300,
+                        //         alignment: Alignment.center,
+                        //         color: Colors.orange,
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        CronometerTime(
+                            scaleAnimation: _scaleAnimation,
+                            buttonScaleAnimation: _buttonScaleAnimation,
+                            textColor: colorTextTheme,
+                            isTimerRunning: isRunning,
+                            breakNewRecord: brokedNewRecord,
+                            containerHeight: widget.containerHeight,
+                            timer: _timer,
+                            height: cronometerHeight,
+                            fontSize: widget.containerHeight > 400
+                                ? widget.fontSize
+                                : widget.fontSize * 0.6),
 
-                        SizedBox(
-                          height: widget.containerHeight > 400
-                              ? 170
-                              : _targetSize != null
-                                  ? _targetSize!.height - 30
-                                  : 70,
-                        ),
+                        // SizedBox(
+                        //   height: widget.containerHeight > 400
+                        //       ? 170
+                        //       : _targetSize != null
+                        //           ? _targetSize!.height - 30
+                        //           : 70,
+                        // ),
 
                         //RESULTS
                         // SlideTransition(
@@ -383,7 +399,7 @@ class _CronometerCubeState extends ConsumerState<CronometerCube>
           if (_targetPosition != null)
             Positioned(
               right: 5,
-              top: _targetPosition!.dy - 15, // Por ejemplo, justo arriba
+              top:  _targetPosition?.dy != null ? _targetPosition!.dy - 15 : 80, // Por ejemplo, justo arriba
               child: Container(
                 padding: const EdgeInsets.symmetric(
                   vertical: 1,
@@ -400,7 +416,10 @@ class _CronometerCubeState extends ConsumerState<CronometerCube>
                 ),
                 child: Text(
                   !isRunning && brokedNewRecord ? "¡New Average Best!" : "",
-                  style: TextStyle(color: colorTextTheme, fontSize: 11, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: colorTextTheme,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -509,7 +528,9 @@ List<Widget> _scrambleInfoColumn({
                     color: colorTextTheme,
                     size: 20,
                   ),
-                  onPressed: () {debugPrint("Scramble");},
+                  onPressed: () {
+                    debugPrint("Scramble");
+                  },
                 ),
               ],
             )
@@ -734,7 +755,8 @@ class CronometerTime extends StatelessWidget {
       required this.breakNewRecord,
       required this.buttonScaleAnimation,
       required this.scaleAnimation,
-      required this.containerHeight})
+      required this.containerHeight, 
+    })
       : _timer = timer;
 
   final Timer _timer;
@@ -749,153 +771,175 @@ class CronometerTime extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FittedBox(
-      fit: BoxFit.scaleDown,
-      child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-        !isTimerRunning && breakNewRecord && containerHeight > 400
-            ? Padding(
-                padding: EdgeInsets.only(
-                    left: 30,
-                    right: 30,
-                    bottom: containerHeight > 400 ? height * 0.37 : 0),
-                child: Text(
-                  !isTimerRunning && breakNewRecord && containerHeight > 400
-                      ? "Congratulations! ${containerHeight > 400 ? '\n' : ''} You've just beaten your previous personal best by ${containerHeight > 400 ? '\n' : ''} 12.23"
-                      : '',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: textColor,
-                    fontWeight: FontWeight.bold
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.only(
+          bottom: 73),
+        child: Column(
+            // mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              !isTimerRunning && breakNewRecord && containerHeight > 400
+                  ? SizedBox(
+                      height: 90,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          left: 30,
+                          right: 30,
+                        ),
+                        child: Text(
+                          !isTimerRunning &&
+                                  breakNewRecord &&
+                                  containerHeight > 400
+                              ? "Congratulations! ${containerHeight > 400 ? '\n' : ''} You've just beaten your previous personal best by ${containerHeight > 400 ? '\n' : ''} 12.23"
+                              : '',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: textColor,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    )
+                  : SizedBox(
+                      height: containerHeight > 400 ? 90 : 0,
+                    ),
+              // SizedBox(
+              //   height: height*0.2,
+              // ),
+              /////////////////////////////////
+              ///Cronometer timing animation///
+              /////////////////////////////////
+              containerHeight > 400
+                  ? _cronometer()
+                  : Expanded(child: _cronometer()),
+
+              /////////////////////////////////////////
+              //buttons in case of breaking best time//
+              /////////////////////////////////////////
+              Container(
+                height: containerHeight > 400 ? 40 : 35,
+                margin: EdgeInsets.only(top: containerHeight > 400 ? 3 : 0),
+                child: ScaleTransition(
+                  scale: buttonScaleAnimation,
+                  child: Visibility(
+                    visible: !isTimerRunning && breakNewRecord,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            CupertinoIcons.xmark,
+                            // Icons.edit_outlined,
+                            color: textColor,
+                            size: 20,
+                          ),
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          onPressed: () {
+                            debugPrint("Xmark");
+                          },
+                        ),
+                        SizedBox(width: 10),
+                        IconButton(
+                          icon: Icon(
+                            CupertinoIcons.slash_circle,
+                            color: textColor,
+                            size: 20,
+                          ),
+                          onPressed: () {},
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                        ),
+                        SizedBox(width: 10),
+                        IconButton(
+                          icon: Icon(
+                            // Icons.autorenew,
+                            CupertinoIcons.flag,
+                            color: textColor,
+                            size: 20,
+                          ),
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          onPressed: () {},
+                        ),
+                        SizedBox(width: 10),
+                        IconButton(
+                          icon: Icon(
+                            // Icons.autorenew,
+                            CupertinoIcons.text_bubble,
+                            color: textColor,
+                            size: 20,
+                          ),
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              )
-            : Container(),
-        // SizedBox(
-        //   height: height*0.2,
-        // ),
-        /////////////////////////////////
-        ///Cronometer timing animation///
-        /////////////////////////////////
-        ScaleTransition(
-          scale: scaleAnimation,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Visibility(
-                  visible: _timer.tick > 60000,
-                  child: Text(
-                    "1:",
-                    style: TextStyle(
-                      fontFamily: 'Lato',
-                      fontSize: fontSize,
-                      color: textColor,
-                      fontWeight: FontWeight.bold,
-                      height: 0.9,
-                    ),
-                  )),
-              Text(
-                _timer.tick > 60000
-                    ? _timer.tick < 70000
-                        ? "0${_timer.tick ~/ 1000 % 60}"
-                        : "${_timer.tick ~/ 1000 % 60}"
-                    : "${_timer.tick ~/ 1000 % 60}",
-                style: TextStyle(
-                  fontFamily: 'Lato',
-                  fontSize: fontSize,
-                  color: textColor,
-                  fontWeight: FontWeight.bold,
-                  height: 0.9,
-                ),
-                textAlign: TextAlign.end,
               ),
-              Text(
-                ".${_timer.tick ~/ 100 % 10}${_timer.tick % 10}",
-                style: TextStyle(
+            ]),
+      ),
+    );
+  }
+
+  ScaleTransition _cronometer() {
+    return ScaleTransition(
+      scale: scaleAnimation,
+      child: Container(
+        // color: Colors.orange,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Visibility(
+                visible: _timer.tick > 60000,
+                child: Text(
+                  "1:",
+                  style: TextStyle(
                     fontFamily: 'Lato',
-                    fontSize: fontSize * 0.75,
+                    fontSize: fontSize,
                     color: textColor,
                     fontWeight: FontWeight.bold,
-                    height: 0.9),
-              )
-            ],
-          ),
-        ),
-
-        /////////////////////////////////////////
-        //buttons in case of breaking best time//
-        /////////////////////////////////////////
-        Container(
-          height: containerHeight > 400 ? 40 : 35,
-          margin: EdgeInsets.only(top: containerHeight > 400 ? 3 : 0),
-          child: ScaleTransition(
-            scale: buttonScaleAnimation,
-            child: Visibility(
-              visible: !isTimerRunning && breakNewRecord,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    icon: Icon(
-                      CupertinoIcons.xmark,
-                      // Icons.edit_outlined,
-                      color: textColor,
-                      size: 20,
-                    ),
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    focusColor: Colors.transparent,
-                    onPressed: () {debugPrint("Xmark");},
+                    height: 0.9,
                   ),
-                  SizedBox(width: 10),
-                  IconButton(
-                    icon: Icon(
-                      CupertinoIcons.slash_circle,
-                      color: textColor,
-                      size: 20,
-                    ),
-                    onPressed: () {},
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    focusColor: Colors.transparent,
-                  ),
-                  SizedBox(width: 10),
-                  IconButton(
-                    icon: Icon(
-                      // Icons.autorenew,
-                      CupertinoIcons.flag,
-                      color: textColor,
-                      size: 20,
-                    ),
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    focusColor: Colors.transparent,
-                    onPressed: () {},
-                  ),
-                  SizedBox(width: 10),
-                  IconButton(
-                    icon: Icon(
-                      // Icons.autorenew,
-                      CupertinoIcons.text_bubble,
-                      color: textColor,
-                      size: 20,
-                    ),
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    focusColor: Colors.transparent,
-                    onPressed: () {},
-                  ),
-                ],
+                )),
+            Text(
+              _timer.tick > 60000
+                  ? _timer.tick < 70000
+                      ? "0${_timer.tick ~/ 1000 % 60}"
+                      : "${_timer.tick ~/ 1000 % 60}"
+                  : "${_timer.tick ~/ 1000 % 60}",
+              style: TextStyle(
+                fontFamily: 'Lato',
+                fontSize: fontSize,
+                color: textColor,
+                fontWeight: FontWeight.bold,
+                height: 0.9,
               ),
+              textAlign: TextAlign.end,
             ),
-          ),
+            Text(
+              ".${_timer.tick ~/ 100 % 10}${_timer.tick % 10}",
+              style: TextStyle(
+                  fontFamily: 'Lato',
+                  fontSize: fontSize * 0.75,
+                  color: textColor,
+                  fontWeight: FontWeight.bold,
+                  height: 0.9),
+            )
+          ],
         ),
-      ]),
+      ),
     );
   }
 }

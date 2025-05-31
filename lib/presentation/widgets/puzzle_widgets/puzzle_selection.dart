@@ -22,7 +22,7 @@ class PuzzleSelection extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         itemCount: cubeTypes.length,
         shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(), // Disables scrolling
+        physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           return CustomButtonSplash(
             name: cubeTypes[index].type, 
