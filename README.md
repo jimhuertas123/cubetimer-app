@@ -23,5 +23,8 @@ This proyect is been changing to drift + riverpod / link will be posted here if 
 replicate proccessing in ios (trying new stuff):
 
 
+refactor of the project here:
+https://github.com/jimhuertas123/cube-timer-oficial
+
 https://github.com/user-attachments/assets/d5bb8925-74a9-42c9-a042-8f3bc55d0a7c
 
