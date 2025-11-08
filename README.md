@@ -20,4 +20,8 @@ This proyect is been changing to drift + riverpod / link will be posted here if 
 
 **WHY DRIFT?** The original project has been working with Sqlite directly that makes write extra code for models and providers, sqlite is more personalize but i dont want to put to much effor only for local db stuff, so drift make it easier and the most important the mistakes with the flow of saving the data is more readable, by the time this readme is wrote, drift is working perfect with riverpod I really like it. 
 
-I'll be back with good news i hope so.
+replicate proccessing in ios (trying new stuff):
+
+
+https://github.com/user-attachments/assets/d5bb8925-74a9-42c9-a042-8f3bc55d0a7c
+
